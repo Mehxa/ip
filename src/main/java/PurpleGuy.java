@@ -15,8 +15,14 @@ public class PurpleGuy {
     public static final String RESET  = "\u001B[0m";
     public static final String S      = "  "; // Empty space
     
-    public static void aftonSpeech(String messge) {
-            System.out.println(AFTON_PURPLE + messge + RESET);
+    public static void aftonSpeech(String message) {
+            System.out.println(AFTON_PURPLE + message + RESET);
+    }
+
+    public static void listTasks(){
+        for (int i=0; i < itemslist.size();i++) {
+            aftonSpeech((i+1)+ "." +itemslist.get(i));
+        }
     }
     public static void main(String[] args) {
 
@@ -46,13 +52,12 @@ public class PurpleGuy {
         aftonSpeech("Tell me... why are you really here?\n");
 
         String userInput = inputScan.nextLine();
+        
         while (!userInput.equals("bye")) {
             if (!userInput.equals("list")) {
                 itemslist.add(userInput);   
             }
-            for (int i=0; i < itemslist.size();i++) {
-                aftonSpeech((i+1)+ "." +itemslist.get(i));
-            }
+            listTasks();
             userInput = inputScan.nextLine();
         }
         aftonSpeech("Don't think this is over... I always come back.\n" + line);
