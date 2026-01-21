@@ -14,4 +14,8 @@ public class Task {
     public void unmark(){
         this.marked = false;
     }
+
+    public String getStatusString() {
+        return (marked ? "X" : " ");
+    }
 }
