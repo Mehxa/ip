@@ -21,9 +21,7 @@ public class PurpleGuy {
 
     public static void listTasks(){
         for (int i=0; i < taskList.size();i++) {
-            Task task = taskList.get(i);
-            String taskStr = "%d.[%s] %s";
-            aftonSpeech(String.format(taskStr,(i+1),task.getStatusString(),task.name));
+            aftonSpeech(String.format("%d.%s",(i+1),taskList.get(i)));
         }
     }
     public static void main(String[] args) {
@@ -60,17 +58,23 @@ public class PurpleGuy {
             switch (caseVars[0]) {
                 case "list":
                     listTasks();
+                    System.out.println();
                     break;
+                    
                 case "mark":
                     int index = Integer.parseInt(caseVars[1])-1;
-                    taskList.get(index).mark();
+                    Task m_task = taskList.get(index);
+                    m_task.mark();
                     aftonSpeech("Done. It's finally... over. For now.");
+                    System.out.println(m_task + "\n");
                     break;
                 
                 case "unmark":
                     int idx = Integer.parseInt(caseVars[1])-1;
-                    taskList.get(idx).unmark();
+                    Task um_task = taskList.get(idx);
+                    um_task.unmark();
                     aftonSpeech("Ah, so it's not finished? Good. The suffering should never really end.");
+                    System.err.println(um_task + "\n");
                     break;
             
                 default:

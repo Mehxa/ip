@@ -18,4 +18,9 @@ public class Task {
     public String getStatusString() {
         return (marked ? "X" : " ");
     }
+
+    public String toString() {
+        String taskStr = "[%s] %s";
+        return String.format(taskStr,this.getStatusString(),this.name);
+    }
 }
