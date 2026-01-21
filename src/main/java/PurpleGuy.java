@@ -54,10 +54,24 @@ public class PurpleGuy {
         String userInput = inputScan.nextLine();
         
         while (!userInput.equals("bye")) {
-            if (!userInput.equals("list")) {
-                itemslist.add(userInput);   
+            switch (userInput) {
+                case "list":
+                    listTasks();
+                    break;
+                case "mark":
+                    aftonSpeech("M");
+                    break;
+                
+                case "unmark":
+                    aftonSpeech("UM");
+                    break;
+            
+                default:
+                    itemslist.add(userInput);
+                    listTasks();
+                    break;
             }
-            listTasks();
+
             userInput = inputScan.nextLine();
         }
         aftonSpeech("Don't think this is over... I always come back.\n" + line);
