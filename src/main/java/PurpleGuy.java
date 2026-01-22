@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class PurpleGuy {
@@ -73,8 +74,18 @@ public class PurpleGuy {
                     int idx = Integer.parseInt(caseVars[1])-1;
                     Task um_task = taskList.get(idx);
                     um_task.unmark();
-                    aftonSpeech("Ah, so it's not finished? Good. The suffering should never really end.");
+                    aftonSpeech("Back again? It seems some things just won't stay buried.");
                     System.err.println(um_task + "\n");
+                    break;
+
+                case "todo":
+                    String taskName = Arrays.stream(caseVars).skip(1).reduce((x,y)-> x + " "+ y)
+                                        .orElse("<Corrupted Task>");
+                    Task td = new ToDo(taskName);
+                    taskList.add(td);
+                    aftonSpeech("Another? Let's see how long this one lasts.");
+                    System.out.println(td + "\n");
+                    aftonSpeech(taskList.size() + " entries remain in your little list now.");
                     break;
             
                 default:
