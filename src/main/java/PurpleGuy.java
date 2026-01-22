@@ -53,7 +53,8 @@ public class PurpleGuy {
         aftonSpeech("Tell me... why are you really here?\n");
 
         String userInput = inputScan.nextLine();
-        
+        int index;
+        String taskName;
         while (!userInput.equals("bye")) {
             String[] caseVars = userInput.split(" ");
             switch (caseVars[0]) {
@@ -63,7 +64,7 @@ public class PurpleGuy {
                     break;
                     
                 case "mark":
-                    int index = Integer.parseInt(caseVars[1])-1;
+                    index = Integer.parseInt(caseVars[1])-1;
                     Task m_task = taskList.get(index);
                     m_task.mark();
                     aftonSpeech("Done. It's finally... over. For now.");
@@ -71,21 +72,31 @@ public class PurpleGuy {
                     break;
                 
                 case "unmark":
-                    int idx = Integer.parseInt(caseVars[1])-1;
-                    Task um_task = taskList.get(idx);
+                    index = Integer.parseInt(caseVars[1])-1;
+                    Task um_task = taskList.get(index);
                     um_task.unmark();
                     aftonSpeech("Back again? It seems some things just won't stay buried.");
                     System.err.println(um_task + "\n");
                     break;
 
                 case "todo":
-                    String taskName = Arrays.stream(caseVars).skip(1).reduce((x,y)-> x + " "+ y)
+                    taskName = Arrays.stream(caseVars).skip(1).reduce((x,y)-> x + " "+ y)
                                         .orElse("<Corrupted Task>");
                     Task td = new ToDo(taskName);
                     taskList.add(td);
                     aftonSpeech("Another? Let's see how long this one lasts.");
-                    System.out.println(td + "\n");
+                    System.out.println(td);
                     aftonSpeech(taskList.size() + " entries remain in your little list now.");
+                    break;
+
+                case "deadline":
+                    String[] dlVars = userInput.split("/by");
+                    taskName = dlVars[0].substring(dlVars[0].indexOf(" ") + 1);
+                    Task dlTask = new Deadline(taskName, dlVars[1]);
+                    taskList.add(dlTask);
+                    aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
+                    System.out.println(dlTask);
+                    aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
                     break;
             
                 default:
