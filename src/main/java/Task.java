@@ -1,10 +1,12 @@
 public class Task {
     String name;
     Boolean marked;
+    String taskStr;
 
     Task(String name){
         this.name = name;
         this.marked = false;
+        this.taskStr = "[%s] %s";
     }
 
     public void mark(){
@@ -20,7 +22,6 @@ public class Task {
     }
 
     public String toString() {
-        String taskStr = "[%s] %s";
         return String.format(taskStr,this.getStatusString(),this.name);
     }
 }
