@@ -91,12 +91,24 @@ public class PurpleGuy {
 
                 case "deadline":
                     String[] dlVars = userInput.split("/by");
-                    taskName = dlVars[0].substring(dlVars[0].indexOf(" ") + 1);
+                    taskName = dlVars[0].substring(dlVars[0].indexOf(" ") + 1).trim();
                     Task dlTask = new Deadline(taskName, dlVars[1]);
                     taskList.add(dlTask);
                     aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
                     System.out.println(dlTask);
                     aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
+                    break;
+
+                case "event":
+                    String[] evVars = userInput.split("(?= /from | /to)");
+                    taskName = evVars[0].substring(evVars[0].indexOf(" ") + 1);
+                    Task evTask = new Event(taskName, 
+                        evVars[1].replace("/from", "").trim(), 
+                        evVars[2].replace("/to", "").trim());
+                    taskList.add(evTask);
+                    aftonSpeech("");
+                    System.err.println(evTask);
+                    aftonSpeech("That makes " + taskList.size() + " acts to follow.");
                     break;
             
                 default:
