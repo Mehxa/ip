@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class PurpleGuy {
@@ -15,9 +14,106 @@ public class PurpleGuy {
     public static final String BLACK  = "\u001B[48;2;0;0;0m  ";
     public static final String RESET  = "\u001B[0m";
     public static final String S      = "  "; // Empty space
-    
+    public static final String[] sprite = {
+        S+S+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+WHITE+BLACK+DARK_P+WHITE+BLACK+DARK_P,
+        S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+DARK_P+V_DARK+V_DARK+V_DARK+V_DARK+DARK_P+DARK_P+DARK_P,
+        S+S+DARK_P+V_DARK+V_DARK+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
+        S+S+S+S+S+DARK_P+S+S+DARK_P,
+        S+S+S+S+S+DARK_P+S+S+DARK_P,
+        S+S+S+S+S+DARK_P+S+S+DARK_P
+    };
+
     public static void aftonSpeech(String message) {
             System.out.println(AFTON_PURPLE + message + RESET);
+    }
+
+    public static void validateCommand(String[] caseVars) throws AftonException {
+        String command = caseVars[0].toLowerCase();
+        // Resolving list first as it is the only command
+        // which does not require extra parameters
+        if (command.equals("list")) {
+            if (caseVars.length > 1 || !caseVars[1].isEmpty()) {
+                throw new AftonException("Do you think I'm blind? I don't need your 'extra information' to view my own ledger. Just say the word and be quiet. " +
+                                         "\n[HINT]: The 'list' command requires no additional words.");
+            }
+        }
+        if (caseVars.length < 2 || caseVars[1].trim().isEmpty()) {
+            throw new AftonException("A hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name." + 
+                                 "\n[HINT]: Try: " + command + " [description] ...");
+        }
+        String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
+        int noBy = 0, noFrom = 0, noTo = 0;
+        int fromIdx = -1, toIdx = -1;
+
+        for (int i = 0; i < details.length; i++) {
+            String detail = details[i].trim();
+            if (detail.startsWith("/by")) {
+                noBy++;
+            }
+            if (detail.startsWith("/from")) {
+                noFrom++;
+                fromIdx = i;
+            }
+            if (detail.startsWith("/to")) {
+                noTo++;
+                toIdx = i;
+            }
+        }
+
+        switch (command) {
+            case "todo":
+                // Todo command inputted with /by, /from or /to
+                if (details.length > 1) {
+                    throw new AftonException("A simple task shouldn't have extra baggage. Keep it clean... like a well-wiped crime scene. " + 
+                                         "\n[HINT]: Todo tasks do not use /by, /from, or /to tags.");
+                }
+                break;
+
+            case "deadline":
+                if (noFrom > 0 || noTo > 0) {
+                    throw new AftonException("You're confusing a deadline with an event. Only one end matters here. " + 
+                                            "\n[HINT]: Remove /from and /to. Only use /by.");
+                }
+                if (noBy == 0) {
+                    throw new AftonException("How disappointing. You forgot the '/by' tag. Precision is the difference between a masterpiece and a... mess. " + 
+                                            "\n[HINT]: A deadline requires a '/by [time]' marker.");
+                }
+                if (noBy > 1) {
+                    throw new AftonException("Too many endings? Even I only needed one. One /by is enough. " + 
+                                            "\n[HINT]: Ensure you only have one '/by' tag.");
+                }
+                break;
+
+            case "event":
+                if (noBy > 0) {
+                    throw new AftonException("Events don't have deadlines; they have schedules. Lose the /by tag. " + 
+                                            "\n[HINT]: Replace '/by' with '/from' and '/to'.");
+                }
+                if (noFrom != 1 || noTo != 1) {
+                    throw new AftonException("The stage is set, but the timing is incomplete. I require exactly one start and one end. " + 
+                                            "\n[HINT]: Ensure you have exactly one '/from' and one '/to' tag.");
+                }
+                if (toIdx < fromIdx) {
+                    throw new AftonException("You're trying to end the show before the curtains even rise? Order is everything. " + 
+                                            "\n[HINT]: Place the '/from' tag before the '/to' tag.");
+                }
+                break;
+
+            // Any other unrecognised command
+            default:
+                throw new AftonException("'" + command + "'? I don't recognize that. Don't waste my time with nonsense. " +
+                                     "\n[HINT]: I only respond to: todo, deadline, event, list, mark, unmark, or delete.");
+        }
+
     }
 
     public static void listTasks(){
@@ -25,26 +121,70 @@ public class PurpleGuy {
             aftonSpeech(String.format("%d.%s",(i+1),taskList.get(i)));
         }
     }
+
+    public static void runCommand(String[] caseVars) {
+        int index;
+        String taskName;
+        String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
+        System.err.println("details: " + String.join(", " , details));
+        switch (caseVars[0]) {
+            case "list":
+                listTasks();
+                System.out.println();
+                break;
+                    
+            case "mark":
+                index = Integer.parseInt(caseVars[1])-1;
+                Task m_task = taskList.get(index);
+                m_task.mark();
+                aftonSpeech("Done. It's finally... over. For now.");
+                System.out.println(m_task + "\n");
+                break;
+            
+            case "unmark":
+                index = Integer.parseInt(caseVars[1])-1;
+                Task um_task = taskList.get(index);
+                um_task.unmark();
+                aftonSpeech("Back again? It seems some things just won't stay buried.");
+                System.err.println(um_task + "\n");
+                break;
+
+            case "todo":
+                taskName = details[0];
+                Task td = new ToDo(taskName);
+                taskList.add(td);
+                aftonSpeech("Another? Let's see how long this one lasts.");
+                System.out.println(td);
+                aftonSpeech(taskList.size() + " entries remain in your little list now.");
+                break;
+
+            case "deadline":
+                taskName = details[0];
+                Task dlTask = new Deadline(taskName, details[1]
+                    .replace("/by", "").trim());
+                taskList.add(dlTask);
+                aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
+                System.out.println(dlTask);
+                aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
+                break;
+
+            case "event":
+                taskName = details[0];
+                Task evTask = new Event(taskName, 
+                    details[1].replace("/from", "").trim(), 
+                    details[2].replace("/to", "").trim());
+                taskList.add(evTask);
+                aftonSpeech("");
+                System.err.println(evTask);
+                aftonSpeech("That makes " + taskList.size() + " acts to follow.");
+                break;
+        
+            default:
+                listTasks();
+                break;
+        }
+    }
     public static void main(String[] args) {
-
-        String[] sprite = {
-            S+S+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+WHITE+BLACK+DARK_P+WHITE+BLACK+DARK_P,
-            S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+DARK_P+V_DARK+V_DARK+V_DARK+V_DARK+DARK_P+DARK_P+DARK_P,
-            S+S+DARK_P+V_DARK+V_DARK+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+S+S+S+DARK_P+DARK_P+DARK_P+DARK_P,
-            S+S+S+S+S+DARK_P+S+S+DARK_P,
-            S+S+S+S+S+DARK_P+S+S+DARK_P,
-            S+S+S+S+S+DARK_P+S+S+DARK_P
-        };
-
         for (String body : sprite) {
             System.out.println(body + RESET);
         }
@@ -53,73 +193,21 @@ public class PurpleGuy {
         aftonSpeech("Tell me... why are you really here?\n");
 
         String userInput = inputScan.nextLine();
-        int index;
-        String taskName;
         while (!userInput.equals("bye")) {
-            String[] caseVars = userInput.split(" ");
-            switch (caseVars[0]) {
-                case "list":
-                    listTasks();
-                    System.out.println();
-                    break;
-                    
-                case "mark":
-                    index = Integer.parseInt(caseVars[1])-1;
-                    Task m_task = taskList.get(index);
-                    m_task.mark();
-                    aftonSpeech("Done. It's finally... over. For now.");
-                    System.out.println(m_task + "\n");
-                    break;
-                
-                case "unmark":
-                    index = Integer.parseInt(caseVars[1])-1;
-                    Task um_task = taskList.get(index);
-                    um_task.unmark();
-                    aftonSpeech("Back again? It seems some things just won't stay buried.");
-                    System.err.println(um_task + "\n");
-                    break;
-
-                case "todo":
-                    taskName = Arrays.stream(caseVars).skip(1).reduce((x,y)-> x + " "+ y)
-                                        .orElse("<Corrupted Task>");
-                    Task td = new ToDo(taskName);
-                    taskList.add(td);
-                    aftonSpeech("Another? Let's see how long this one lasts.");
-                    System.out.println(td);
-                    aftonSpeech(taskList.size() + " entries remain in your little list now.");
-                    break;
-
-                case "deadline":
-                    String[] dlVars = userInput.split("/by");
-                    taskName = dlVars[0].substring(dlVars[0].indexOf(" ") + 1).trim();
-                    Task dlTask = new Deadline(taskName, dlVars[1]);
-                    taskList.add(dlTask);
-                    aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
-                    System.out.println(dlTask);
-                    aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
-                    break;
-
-                case "event":
-                    String[] evVars = userInput.split("(?= /from | /to)");
-                    taskName = evVars[0].substring(evVars[0].indexOf(" ") + 1);
-                    Task evTask = new Event(taskName, 
-                        evVars[1].replace("/from", "").trim(), 
-                        evVars[2].replace("/to", "").trim());
-                    taskList.add(evTask);
-                    aftonSpeech("");
-                    System.err.println(evTask);
-                    aftonSpeech("That makes " + taskList.size() + " acts to follow.");
-                    break;
-            
-                default:
-                    taskList.add(new Task(userInput));
-                    listTasks();
-                    break;
-            }
+            try {
+                if (userInput.trim().isEmpty()) {
+                    throw new AftonException("Silence? You wake me only to offer... nothing? Speak, or stay out of my wires. " + 
+                                 "\n[HINT]: Type a valid command (todo, deadline, event, mark, unmark).");
+                }
+                String[] caseVars = userInput.split("\\s+", 2); // To extract command
+                validateCommand(caseVars);
+                runCommand(caseVars);
+            } catch (AftonException e) {
+                aftonSpeech(e.getMessage());
+            }            
 
             userInput = inputScan.nextLine();
         }
         aftonSpeech("Don't think this is over... I always come back.\n" + line);
     }
 }
-
