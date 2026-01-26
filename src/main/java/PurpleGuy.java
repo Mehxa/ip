@@ -166,7 +166,8 @@ public class PurpleGuy {
             // Fallthrough
             // Mark unmark and delete go through the same validation process
         case "unmark":
-            //case "delete":
+            // Fallthrough
+        case "delete":
             if (taskList.isEmpty()) {
                 throw new AftonException("There is nothing here to silence. You haven't even started your work. "
                                     + "\n[HINT]: Add a task before trying to " + command);
@@ -247,7 +248,7 @@ public class PurpleGuy {
                 .replace("/by", "").trim());
             taskList.add(dlTask);
             aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
-            System.out.println(dlTask);
+            aftonSpeech(dlTask.toString());
             aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
             break;
 
@@ -258,9 +259,23 @@ public class PurpleGuy {
                 details[2].replace("/to", "").trim());
             taskList.add(evTask);
             aftonSpeech("");
-            System.err.println(evTask);
+            aftonSpeech(evTask.toString());
             aftonSpeech("That makes " + taskList.size() + " acts to follow.");
             break;
+
+        case "delete":
+            index = Integer.parseInt(caseVars[1]) - 1;
+            Task delTask = taskList.get(index);
+            taskList.remove(index);
+            aftonSpeech("Erased. A pity... I was starting to like that one."
+                + " Now no one will even know it existed.");
+            aftonSpeech(delTask.toString());
+            String delMessage = (taskList.size() == 0)
+                ? "The room is empty. Silence at last... but for how long?"
+                : "There are " + taskList.size() + " souls left to manage. We aren't finished yet";
+            aftonSpeech(delMessage);
+            break;
+
 
         default:
             listTasks();
