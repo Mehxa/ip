@@ -41,7 +41,7 @@
 [38;2;120;0;200mYou're confusing a deadline with an event. Only one end matters here.
 [HINT]: Remove /from and /to. Only use /by.[0m
 [38;2;120;0;200mA deadline? How fitting. Time is a luxury most of them didn't have.[0m
-[D][ ] fazbear frights (by: Fifth night)
+[38;2;120;0;200m[D][ ] fazbear frights (by: Fifth night)[0m
 [38;2;120;0;200mThat's 2 clocks ticking in the dark[0m
 [38;2;120;0;200mA hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name.
 [HINT]: Try: event [description] ...[0m
@@ -52,6 +52,7 @@
 [38;2;120;0;200mYou're trying to end the show before the curtains even rise? Order is everything.
 [HINT]: Place the '/from' tag before the '/to' tag.[0m
 [38;2;120;0;200m[0m
+[38;2;120;0;200m[E][ ] pizzeria simulator (from: Night 1 to: The Party)[0m
 [38;2;120;0;200mThat makes 3 acts to follow.[0m
 [38;2;120;0;200mDo you think I'm blind? I don't need your 'extra information' to view my own ledger. Just say the word and be quiet.
 [HINT]: The 'list' command requires no additional words.[0m
@@ -71,6 +72,21 @@
 [38;2;120;0;200mBack again? It seems some things just won't stay buried.[0m
 [38;2;120;0;200m[T][ ] free baby
 [0m
+[38;2;120;0;200mYou're pointing at thin air. Give me a number, or step away. 
+[HINT]: Usage: delete [task index number][0m
+[38;2;120;0;200m'ennard' is not a number.I require mathematical precision, not guesswork.
+[HINT]: Provide a valid integer index.[0m
+[38;2;120;0;200mAre you seeing ghosts? That record doesn't exist. Stay within the count.
+[HINT]: Enter a number between 1 and 3.[0m
+[38;2;120;0;200mErased. A pity... I was starting to like that one. Now no one will even know it existed.[0m
+[38;2;120;0;200m[D][ ] fazbear frights (by: Fifth night)[0m
+[38;2;120;0;200mThere are 2 souls left to manage. We aren't finished yet[0m
+[38;2;120;0;200mErased. A pity... I was starting to like that one. Now no one will even know it existed.[0m
+[38;2;120;0;200m[E][ ] pizzeria simulator (from: Night 1 to: The Party)[0m
+[38;2;120;0;200mThere are 1 souls left to manage. We aren't finished yet[0m
+[38;2;120;0;200mErased. A pity... I was starting to like that one. Now no one will even know it existed.[0m
+[38;2;120;0;200m[T][ ] free baby[0m
+[38;2;120;0;200mThe room is empty. Silence at last... but for how long?[0m
 [38;2;120;0;200mDon't think this is over... I always come back.
 ??????????????????????????????????????????????????
 [0m

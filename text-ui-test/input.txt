@@ -22,4 +22,10 @@ mark 1
 mark 1987
 unmark 1993
 unmark 1
+delete
+delete ennard
+delete 2000
+delete 2
+delete 2
+delete 1
 bye
