@@ -215,14 +215,13 @@ public class PurpleGuy {
             return;
         }
         String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
-        System.err.println("details: " + String.join(", " , details));
         switch (caseVars[0]) {
         case "mark":
             index = Integer.parseInt(caseVars[1]) - 1;
             Task mTask = taskList.get(index);
             mTask.mark();
             aftonSpeech("Done. It's finally... over. For now.");
-            System.out.println(mTask + "\n");
+            aftonSpeech(mTask + "\n");
             break;
 
         case "unmark":
@@ -230,7 +229,7 @@ public class PurpleGuy {
             Task umTask = taskList.get(index);
             umTask.unmark();
             aftonSpeech("Back again? It seems some things just won't stay buried.");
-            System.err.println(umTask + "\n");
+            aftonSpeech(umTask + "\n");
             break;
 
         case "todo":

@@ -17,23 +17,60 @@
 [38;2;120;0;200mI'm William. But I suppose you have your own names for me.[0m
 [38;2;120;0;200mTell me... why are you really here?
 [0m
-
-[38;2;120;0;200m1.[ ] hello father[0m
+[38;2;120;0;200mThere is nothing here to silence. You haven't even started your work. 
+[HINT]: Add a task before trying to list[0m
+[38;2;120;0;200mThere is nothing here to silence. You haven't even started your work. 
+[HINT]: Add a task before trying to mark[0m
+[38;2;120;0;200mThere is nothing here to silence. You haven't even started your work. 
+[HINT]: Add a task before trying to unmark[0m
+[38;2;120;0;200m'hello'? I don't recognize that. Don't waste my time with nonsense. 
+[HINT]: I only respond to: todo, deadline, event, list, mark, unmark, or delete.[0m
+[38;2;120;0;200mA hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name.
+[HINT]: Try: todo [description] ...[0m
+[38;2;120;0;200mA simple task shouldn't have extra baggage. Keep it clean... like a well-wiped crime scene.
+[HINT]: Todo tasks do not use /by, /from, or /to tags.[0m
+[38;2;120;0;200mA simple task shouldn't have extra baggage. Keep it clean... like a well-wiped crime scene.
+[HINT]: Todo tasks do not use /by, /from, or /to tags.[0m
 [38;2;120;0;200mAnother? Let's see how long this one lasts.[0m
 [T][ ] free baby
-[38;2;120;0;200m2 entries remain in your little list now.[0m
+[38;2;120;0;200m1 entries remain in your little list now.[0m
+[38;2;120;0;200mA hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name.
+[HINT]: Try: deadline [description] ...[0m
+[38;2;120;0;200mA hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name.
+[HINT]: Try: deadline [description] ...[0m
+[38;2;120;0;200mYou're confusing a deadline with an event. Only one end matters here.
+[HINT]: Remove /from and /to. Only use /by.[0m
 [38;2;120;0;200mA deadline? How fitting. Time is a luxury most of them didn't have.[0m
-[D][ ] fazbear frights (by:  Fifth night)
-[38;2;120;0;200mThat's 3 clocks ticking in the dark[0m
-[38;2;120;0;200mDone. It's finally... over. For now.[0m
-[X] hello father
-
-[38;2;120;0;200mDone. It's finally... over. For now.[0m
-[T][X] free baby
-
+[D][ ] fazbear frights (by: Fifth night)
+[38;2;120;0;200mThat's 2 clocks ticking in the dark[0m
+[38;2;120;0;200mA hollow entry? Much like those empty suits, it's useless without...something inside. Give it a name.
+[HINT]: Try: event [description] ...[0m
+[38;2;120;0;200mThe stage is set, but the actors have no cues for /from. Provide a time, or the curtains stay closed.
+[HINT]: Provide the timing details immediately after the /from tag[0m
+[38;2;120;0;200mYou've started the performance, but left the ending in a void. Tell me when /to finish it
+[HINT]: Provide the timing details immediately after the /to tag[0m
+[38;2;120;0;200mYou're trying to end the show before the curtains even rise? Order is everything.
+[HINT]: Place the '/from' tag before the '/to' tag.[0m
 [38;2;120;0;200m[0m
-[38;2;120;0;200mThat makes 4 acts to follow.[0m
+[38;2;120;0;200mThat makes 3 acts to follow.[0m
+[38;2;120;0;200mDo you think I'm blind? I don't need your 'extra information' to view my own ledger. Just say the word and be quiet.
+[HINT]: The 'list' command requires no additional words.[0m
+[38;2;120;0;200m1.[T][ ] free baby[0m
+[38;2;120;0;200m2.[D][ ] fazbear frights (by: Fifth night)[0m
+[38;2;120;0;200m3.[E][ ] pizzeria simulator (from: Night 1 to: The Party)[0m
+
+[38;2;120;0;200m'sdfnouishfiasuefh' is not a number.I require mathematical precision, not guesswork.
+[HINT]: Provide a valid integer index.[0m
+[38;2;120;0;200mDone. It's finally... over. For now.[0m
+[38;2;120;0;200m[T][X] free baby
+[0m
+[38;2;120;0;200mAre you seeing ghosts? That record doesn't exist. Stay within the count.
+[HINT]: Enter a number between 1 and 3.[0m
+[38;2;120;0;200mAre you seeing ghosts? That record doesn't exist. Stay within the count.
+[HINT]: Enter a number between 1 and 3.[0m
 [38;2;120;0;200mBack again? It seems some things just won't stay buried.[0m
+[38;2;120;0;200m[T][ ] free baby
+[0m
 [38;2;120;0;200mDon't think this is over... I always come back.
 ??????????????????????????????????????????????????
 [0m
