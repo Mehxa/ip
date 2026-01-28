@@ -3,6 +3,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -253,8 +255,8 @@ public class PurpleGuy {
 
         case "deadline":
             taskName = details[0];
-            Task dlTask = new Deadline(taskName, details[1]
-                .replace("/by", "").trim());
+            Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
+                .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             taskList.add(dlTask);
             aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
             aftonSpeech(dlTask.toString());
@@ -327,7 +329,9 @@ public class PurpleGuy {
                     t = new ToDo(taskName);
                     break;
                 case "D":
-                    t = new Deadline(taskName, taskVars[3].trim());
+                    t = new Deadline(taskName, LocalDateTime.parse(
+                        taskVars[3].trim(),
+                        DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")));
                     break;
                 case "E":
                     String[] time = taskVars[3].trim().split("-");
