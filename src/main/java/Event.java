@@ -15,4 +15,9 @@ public class Event extends Task {
     public String toString() {
         return String.format("[E]%s (from: %s to: %s)", super.toString(), start, end);
     }
+
+    @Override
+    public String toData() {
+        return String.format("E | %s | %s to %s", super.toData(), start, end);
+    }
 }

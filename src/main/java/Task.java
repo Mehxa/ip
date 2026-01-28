@@ -5,12 +5,10 @@
 public class Task {
     private String name;
     private Boolean marked;
-    private String taskStr;
 
     Task(String name) {
         this.name = name;
         this.marked = false;
-        this.taskStr = "[%s] %s";
     }
 
     /**
@@ -39,6 +37,10 @@ public class Task {
      * Returns a formatted string containing the details of the task
      */
     public String toString() {
-        return String.format(taskStr, this.getStatusString(), this.name);
+        return String.format("[%s] %s", this.getStatusString(), this.name);
+    }
+
+    public String toData() {
+        return String.format("%s | %s", this.getStatusString(), this.name);
     }
 }
