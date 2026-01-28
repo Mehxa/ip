@@ -305,7 +305,6 @@ public class PurpleGuy {
             Files.createDirectories(fileName.getParent());
             Files.write(fileName, tL.stream().map(x->x.toData()).toList(),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            System.out.println("File overwritten");
         } catch (IOException e) {
             System.err.println("An error has occurred: " + e.getMessage());
             e.printStackTrace();
@@ -320,7 +319,27 @@ public class PurpleGuy {
         try {
             List<String> taskData = Files.readAllLines(fileName);
             for (String string : taskData) {
-                System.out.println(string);
+                String[] taskVars = string.split("\\|");
+                Task t = null;
+                String taskName = taskVars[2].trim();
+                switch (taskVars[0].trim()) {
+                case "T":
+                    t = new ToDo(taskName);
+                    break;
+                case "D":
+                    t = new Deadline(taskName, taskVars[3].trim());
+                    break;
+                case "E":
+                    String[] time = taskVars[3].trim().split("-");
+                    t = new Event(taskName, time[0].trim(), time[1].trim());
+                    break;
+                default:
+                    break;
+                }
+                if (taskVars[1].trim().equals("X")) {
+                    t.mark();
+                }
+                taskList.add(t);
             }
 
         } catch (IOException e) {
@@ -330,6 +349,7 @@ public class PurpleGuy {
     }
 
     public static void main(String[] args) {
+        readTL();
         for (String body : SPRITE) {
             System.out.println(body + RESET);
         }
