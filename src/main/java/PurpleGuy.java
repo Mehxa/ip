@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -240,6 +245,7 @@ public class PurpleGuy {
             aftonSpeech("Another? Let's see how long this one lasts.");
             System.out.println(td);
             aftonSpeech(taskList.size() + " entries remain in your little list now.");
+            storeTL(taskList);
             break;
 
         case "deadline":
@@ -282,6 +288,22 @@ public class PurpleGuy {
             break;
         }
     }
+
+    /**
+     * Stores the current state of the taskList to the PurpleGuy.txt file
+     * @param tL ArrayList of Tasks, the current taskList
+     */
+    public static void storeTL(ArrayList<Task> tL) {
+        Path fileName = Paths.get("./data/PurpleGuy.txt");
+        try {
+            Files.createDirectories(fileName.getParent());
+            Files.write(fileName, "test".getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            System.err.println("An error has occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         for (String body : SPRITE) {
             System.out.println(body + RESET);
