@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -228,6 +229,7 @@ public class PurpleGuy {
             mTask.mark();
             aftonSpeech("Done. It's finally... over. For now.");
             aftonSpeech(mTask + "\n");
+            storeTL(taskList);
             break;
 
         case "unmark":
@@ -236,6 +238,7 @@ public class PurpleGuy {
             umTask.unmark();
             aftonSpeech("Back again? It seems some things just won't stay buried.");
             aftonSpeech(umTask + "\n");
+            storeTL(taskList);
             break;
 
         case "todo":
@@ -243,7 +246,7 @@ public class PurpleGuy {
             Task td = new ToDo(taskName);
             taskList.add(td);
             aftonSpeech("Another? Let's see how long this one lasts.");
-            System.out.println(td);
+            aftonSpeech(td.toString());
             aftonSpeech(taskList.size() + " entries remain in your little list now.");
             storeTL(taskList);
             break;
@@ -256,6 +259,7 @@ public class PurpleGuy {
             aftonSpeech("A deadline? How fitting. Time is a luxury most of them didn't have.");
             aftonSpeech(dlTask.toString());
             aftonSpeech("That's " + taskList.size() + " clocks ticking in the dark");
+            storeTL(taskList);
             break;
 
         case "event":
@@ -267,6 +271,7 @@ public class PurpleGuy {
             aftonSpeech("");
             aftonSpeech(evTask.toString());
             aftonSpeech("That makes " + taskList.size() + " acts to follow.");
+            storeTL(taskList);
             break;
 
         case "delete":
@@ -280,6 +285,7 @@ public class PurpleGuy {
                 ? "The room is empty. Silence at last... but for how long?"
                 : "There are " + taskList.size() + " souls left to manage. We aren't finished yet";
             aftonSpeech(delMessage);
+            storeTL(taskList);
             break;
 
 
@@ -297,10 +303,29 @@ public class PurpleGuy {
         Path fileName = Paths.get("./data/PurpleGuy.txt");
         try {
             Files.createDirectories(fileName.getParent());
-            Files.write(fileName, "test".getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            Files.write(fileName, tL.stream().map(x->x.toData()).toList(),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            System.out.println("File overwritten");
         } catch (IOException e) {
             System.err.println("An error has occurred: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retrieves task data from the PurpleGuy.txt file to update the taskList
+     */
+    public static void readTL() {
+        Path fileName = Paths.get("./data/PurpleGuy.txt");
+        try {
+            List<String> taskData = Files.readAllLines(fileName);
+            for (String string : taskData) {
+                System.out.println(string);
+            }
+
+        } catch (IOException e) {
+            System.err.println("An error occured while attempting to read PurpleGuy.txt");
+            System.err.println(e.getMessage());
         }
     }
 
