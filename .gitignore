@@ -23,4 +23,4 @@ text-ui-test/EXPECTED-UNIX.TXT
 /.vscode/
 
 # Stored Tasklist file
-/data/
+/src/main/java/purpleguy/data/

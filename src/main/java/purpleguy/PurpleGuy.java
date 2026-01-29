@@ -1,3 +1,6 @@
+package purpleguy;
+
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -302,7 +305,7 @@ public class PurpleGuy {
      * @param tL ArrayList of Tasks, the current taskList
      */
     public static void storeTL(ArrayList<Task> tL) {
-        Path fileName = Paths.get("./data/PurpleGuy.txt");
+        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
         try {
             Files.createDirectories(fileName.getParent());
             Files.write(fileName, tL.stream().map(x->x.toData()).toList(),
@@ -317,7 +320,8 @@ public class PurpleGuy {
      * Retrieves task data from the PurpleGuy.txt file to update the taskList
      */
     public static void readTL() {
-        Path fileName = Paths.get("./data/PurpleGuy.txt");
+        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
+        System.err.println(Paths.get("").toAbsolutePath().toString());
         try {
             List<String> taskData = Files.readAllLines(fileName);
             for (String string : taskData) {

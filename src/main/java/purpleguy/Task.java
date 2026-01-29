@@ -1,3 +1,4 @@
+package purpleguy;
 /**
  * Provides the blueprint for all Task-based children classes
  * Contains the details of a Task

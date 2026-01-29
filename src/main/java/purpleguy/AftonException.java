@@ -1,3 +1,4 @@
+package purpleguy;
 /**
  * Represents Exceptions specific to the PurpleGuy application.
  */

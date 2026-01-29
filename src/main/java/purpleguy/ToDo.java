@@ -1,3 +1,4 @@
+package purpleguy;
 /**
  * Contains the details of a task with only a completion status.
  */
