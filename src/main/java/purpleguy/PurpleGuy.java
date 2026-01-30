@@ -1,15 +1,9 @@
 package purpleguy;
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Runs the main() code for the PurpleGuy program.
@@ -18,9 +12,8 @@ import java.util.List;
 
 public class PurpleGuy {
     private static AftonUI afton = new AftonUI();
+    private static Storage storageFile = new Storage();
     private static ArrayList<Task> taskList = new ArrayList<>(100);
-
-
 
     /**
      * Validates input given by the user
@@ -201,7 +194,7 @@ public class PurpleGuy {
             mTask.mark();
             afton.speak("Done. It's finally... over. For now.");
             afton.speak(mTask + "\n");
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
         case "unmark":
@@ -210,7 +203,7 @@ public class PurpleGuy {
             umTask.unmark();
             afton.speak("Back again? It seems some things just won't stay buried.");
             afton.speak(umTask + "\n");
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
         case "todo":
@@ -220,7 +213,7 @@ public class PurpleGuy {
             afton.speak("Another? Let's see how long this one lasts.");
             afton.speak(td.toString());
             afton.speak(taskList.size() + " entries remain in your little list now.");
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
         case "deadline":
@@ -231,7 +224,7 @@ public class PurpleGuy {
             afton.speak("A deadline? How fitting. Time is a luxury most of them didn't have.");
             afton.speak(dlTask.toString());
             afton.speak("That's " + taskList.size() + " clocks ticking in the dark");
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
         case "event":
@@ -243,7 +236,7 @@ public class PurpleGuy {
             afton.speak("");
             afton.speak(evTask.toString());
             afton.speak("That makes " + taskList.size() + " acts to follow.");
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
         case "delete":
@@ -257,7 +250,7 @@ public class PurpleGuy {
                 ? "The room is empty. Silence at last... but for how long?"
                 : "There are " + taskList.size() + " souls left to manage. We aren't finished yet";
             afton.speak(delMessage);
-            storeTL(taskList);
+            storageFile.storeTL(taskList);
             break;
 
 
@@ -267,69 +260,12 @@ public class PurpleGuy {
         }
     }
 
-    /**
-     * Stores the current state of the taskList to the PurpleGuy.txt file
-     * @param tL ArrayList of Tasks, the current taskList
-     */
-    public static void storeTL(ArrayList<Task> tL) {
-        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
-        try {
-            Files.createDirectories(fileName.getParent());
-            Files.write(fileName, tL.stream().map(x->x.toData()).toList(),
-                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            System.err.println("An error has occurred: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Retrieves task data from the PurpleGuy.txt file to update the taskList
-     */
-    public static void readTL() {
-        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
-        System.err.println(Paths.get("").toAbsolutePath().toString());
-        try {
-            List<String> taskData = Files.readAllLines(fileName);
-            for (String string : taskData) {
-                String[] taskVars = string.split("\\|");
-                Task t = null;
-                String taskName = taskVars[2].trim();
-                switch (taskVars[0].trim()) {
-                case "T":
-                    t = new ToDo(taskName);
-                    break;
-                case "D":
-                    t = new Deadline(taskName, LocalDateTime.parse(
-                        taskVars[3].trim(),
-                        DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")));
-                    break;
-                case "E":
-                    String[] time = taskVars[3].trim().split("-");
-                    t = new Event(taskName, time[0].trim(), time[1].trim());
-                    break;
-                default:
-                    break;
-                }
-                if (taskVars[1].trim().equals("X")) {
-                    t.mark();
-                }
-                taskList.add(t);
-            }
-
-        } catch (IOException e) {
-            System.err.println("An error occured while attempting to read PurpleGuy.txt");
-            System.err.println(e.getMessage());
-        }
-    }
-
     public static void main(String[] args) {
-        readTL();
+        storageFile.readTL(taskList);
         afton.initialise();
-        String userInput = "";
+        String userInput = afton.readInput();
         while (!userInput.equals("bye")) {
             try {
-                userInput = afton.readInput();
                 if (userInput.trim().isEmpty()) {
                     throw new AftonException("Silence? You wake me only to offer... nothing?"
                     + " Speak, or stay out of my wires."
@@ -341,6 +277,7 @@ public class PurpleGuy {
             } catch (AftonException e) {
                 afton.speak(e.getMessage());
             }
+            userInput = afton.readInput();
         }
         afton.shutDown();
     }
