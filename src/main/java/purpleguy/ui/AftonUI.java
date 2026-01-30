@@ -1,4 +1,4 @@
-package purpleguy;
+package purpleguy.ui;
 
 import java.util.Scanner;
 /**

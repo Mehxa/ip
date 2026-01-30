@@ -7,7 +7,13 @@ import java.time.format.DateTimeFormatter;
  */
 public class Deadline extends Task {
     private LocalDateTime deadline;
-    Deadline(String name, LocalDateTime deadline) {
+
+    /**
+     * Creates a new Deadline task using the given name and deadline
+     * @param name Name of the task
+     * @param deadline LocalDateTime object representing task deadline
+     */
+    public Deadline(String name, LocalDateTime deadline) {
         super(name);
         this.deadline = deadline;
     }

@@ -1,6 +1,10 @@
 package purpleguy;
 
+import purpleguy.exception.AftonException;
+import purpleguy.parser.Parser;
+import purpleguy.storage.Storage;
 import purpleguy.tasklist.TaskList;
+import purpleguy.ui.AftonUI;
 
 /**
  * Runs the main() code for the PurpleGuy program.
@@ -21,7 +25,7 @@ public class PurpleGuy {
                 if (userInput.trim().isEmpty()) {
                     throw new AftonException("Silence? You wake me only to offer... nothing?"
                     + " Speak, or stay out of my wires."
-                    + "\n[HINT]: Type a valid command (todo, deadline, event, mark, unmark).");
+                    + "\n[HINT]: Type a valid command (list, todo, deadline, event, mark, unmark).");
                 }
                 p.parse(userInput);
             } catch (AftonException e) {

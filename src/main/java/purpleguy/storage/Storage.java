@@ -1,4 +1,4 @@
-package purpleguy;
+package purpleguy.storage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import purpleguy.Deadline;
+import purpleguy.Event;
+import purpleguy.Task;
+import purpleguy.ToDo;
 import purpleguy.tasklist.TaskList;
 
 /**

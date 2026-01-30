@@ -3,7 +3,7 @@ package purpleguy;
  * Contains the details of a task with only a completion status.
  */
 public class ToDo extends Task {
-    ToDo(String name) {
+    public ToDo(String name) {
         super(name);
     }
 

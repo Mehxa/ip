@@ -6,7 +6,13 @@ public class Event extends Task {
     private String start;
     private String end;
 
-    Event(String name, String start, String end) {
+    /**
+     * Creates an Event task using the given name, start and end times
+     * @param name Name of the task
+     * @param start Start time of the event
+     * @param end End time of the event
+     */
+    public Event(String name, String start, String end) {
         super(name);
         this.start = start;
         this.end = end;

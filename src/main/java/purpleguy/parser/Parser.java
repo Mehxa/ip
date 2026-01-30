@@ -1,9 +1,15 @@
-package purpleguy;
+package purpleguy.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import purpleguy.Deadline;
+import purpleguy.Event;
+import purpleguy.Task;
+import purpleguy.ToDo;
+import purpleguy.exception.AftonException;
 import purpleguy.tasklist.TaskList;
+import purpleguy.ui.AftonUI;
 
 /**
  * Parses and executes the commands inputted by the user
