@@ -1,17 +1,15 @@
 package purpleguy;
 
-
-import java.util.ArrayList;
+import purpleguy.tasklist.TaskList;
 
 /**
  * Runs the main() code for the PurpleGuy program.
  * Implements CRUD functionality for various types of tasks.
  */
-
 public class PurpleGuy {
     private static AftonUI afton = new AftonUI();
     private static Storage storageFile = new Storage();
-    private static ArrayList<Task> taskList = new ArrayList<>(100);
+    private static TaskList taskList = new TaskList();
 
     public static void main(String[] args) {
         storageFile.readTL(taskList);

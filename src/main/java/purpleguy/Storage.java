@@ -7,8 +7,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
+
+import purpleguy.tasklist.TaskList;
 
 /**
  * Handles the reading and writing of tasks to and from the storage file (PurpleGuy.txt)
@@ -20,13 +21,13 @@ public class Storage {
 
     /**
      * Stores the current state of the taskList to the PurpleGuy.txt file
-     * @param tL ArrayList of Tasks, the current taskList
+     * @param tL The current taskList
      */
-    public void storeTL(ArrayList<Task> tL) {
+    public void storeTL(TaskList tL) {
         Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
         try {
             Files.createDirectories(fileName.getParent());
-            Files.write(fileName, tL.stream().map(x->x.toData()).toList(),
+            Files.write(fileName, tL.toData(),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             System.err.println("An error has occurred: " + e.getMessage());
@@ -36,9 +37,9 @@ public class Storage {
 
     /**
      * Retrieves task data from the PurpleGuy.txt file to update the taskList
-     * @param tL ArrayList of Tasks, the current taskList
+     * @param tL The current taskList
      */
-    public void readTL(ArrayList<Task> tL) {
+    public void readTL(TaskList tL) {
         Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
         System.err.println(Paths.get("").toAbsolutePath().toString());
         try {
@@ -66,7 +67,7 @@ public class Storage {
                 if (taskVars[1].trim().equals("X")) {
                     t.mark();
                 }
-                tL.add(t);
+                tL.addTask(t);
             }
 
         } catch (IOException e) {

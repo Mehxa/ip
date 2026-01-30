@@ -2,21 +2,22 @@ package purpleguy;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
+import purpleguy.tasklist.TaskList;
 
 /**
  * Parses and executes the commands inputted by the user
  */
 public class Parser {
     private static AftonUI afton;
-    private static ArrayList<Task> tL;
+    private static TaskList tL;
 
     /**
      * Creates a new Parser object
      * @param ui AftonUI for printing out success and error messages
      * @param taskList ArrayList of Tasks, the current taskList
      */
-    public Parser(AftonUI ui, ArrayList<Task> taskList) {
+    public Parser(AftonUI ui, TaskList taskList) {
         afton = ui;
         tL = taskList;
     }
@@ -224,7 +225,7 @@ public class Parser {
         case "todo":
             taskName = details[0];
             Task td = new ToDo(taskName);
-            tL.add(td);
+            tL.addTask(td);
             afton.speak("Another? Let's see how long this one lasts.");
             afton.speak(td.toString());
             afton.speak(tL.size() + " entries remain in your little list now.");
@@ -234,7 +235,7 @@ public class Parser {
             taskName = details[0];
             Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
                 .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-            tL.add(dlTask);
+            tL.addTask(dlTask);
             afton.speak("A deadline? How fitting. Time is a luxury most of them didn't have.");
             afton.speak(dlTask.toString());
             afton.speak("That's " + tL.size() + " clocks ticking in the dark");
@@ -245,7 +246,7 @@ public class Parser {
             Task evTask = new Event(taskName,
                 details[1].replace("/from", "").trim(),
                 details[2].replace("/to", "").trim());
-            tL.add(evTask);
+            tL.addTask(evTask);
             afton.speak("");
             afton.speak(evTask.toString());
             afton.speak("That makes " + tL.size() + " acts to follow.");
@@ -263,7 +264,6 @@ public class Parser {
                 : "There are " + tL.size() + " souls left to manage. We aren't finished yet";
             afton.speak(delMessage);
             break;
-
 
         default:
             listTasks();
