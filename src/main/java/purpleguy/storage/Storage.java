@@ -28,7 +28,7 @@ public class Storage {
      * @param tL The current taskList
      */
     public void storeTL(TaskList tL) {
-        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
+        Path fileName = Paths.get(STORAGE_FILEPATH);
         try {
             Files.createDirectories(fileName.getParent());
             Files.write(fileName, tL.toData(),
@@ -44,8 +44,7 @@ public class Storage {
      * @param tL The current taskList
      */
     public void readTL(TaskList tL) {
-        Path fileName = Paths.get("./src/main/java/purpleguy/data/PurpleGuy.txt");
-        System.err.println(Paths.get("").toAbsolutePath().toString());
+        Path fileName = Paths.get(STORAGE_FILEPATH);
         try {
             List<String> taskData = Files.readAllLines(fileName);
             for (String string : taskData) {
