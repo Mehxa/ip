@@ -35,6 +35,15 @@ public class Task {
     }
 
     /**
+     * Checks if the task's name contains a certain substring
+     * @param s Substring to check for
+     * @return T/F based on if the substring is in the name
+     */
+    public boolean containsString(String s) {
+        return this.name.contains(s);
+    }
+
+    /**
      * Returns a formatted string containing the details of the task
      */
     public String toString() {

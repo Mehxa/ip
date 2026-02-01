@@ -34,7 +34,11 @@ public class TaskList {
         tL.remove(index);
     }
 
+    public List<Task> findTasks(String s) {
+        return tL.stream().filter(x -> x.containsString(s)).toList();
+    }
+
     public List<String> toData() {
-        return tL.stream().map(x->x.toData()).toList();
+        return tL.stream().map(x -> x.toData()).toList();
     }
 }

@@ -24,8 +24,8 @@ public class PurpleGuy {
             try {
                 if (userInput.trim().isEmpty()) {
                     throw new AftonException("Silence? You wake me only to offer... nothing?"
-                    + " Speak, or stay out of my wires."
-                    + "\n[HINT]: Type a valid command (list, todo, deadline, event, mark, unmark).");
+                        + " Speak, or stay out of my wires."
+                        + "\n[HINT]: Type a valid command (list, todo, deadline, event, mark, unmark).");
                 }
                 p.parse(userInput);
             } catch (AftonException e) {
