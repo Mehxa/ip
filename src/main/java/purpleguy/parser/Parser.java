@@ -63,6 +63,15 @@ public class Parser {
             return;
         }
 
+        if (command.equals("find")) {
+            if (tL.isEmpty()) {
+                throw new AftonException("You’re hunting for shadows in an empty room. "
+                + "There is nothing here to find... yet."
+                + "\n[HINT]: Add a task before you attempt to find it");
+            }
+            return;
+        }
+
         // Command missing essential information
         if (caseVars.length < 2 || caseVars[1].trim().isEmpty() || caseVars[1].startsWith("/")) {
             // More specific error message for missing index rather than missing name
