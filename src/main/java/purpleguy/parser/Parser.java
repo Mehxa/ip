@@ -2,6 +2,7 @@ package purpleguy.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import purpleguy.Deadline;
 import purpleguy.Event;
@@ -73,6 +74,15 @@ public class Parser {
             throw new AftonException("A hollow entry? Much like those empty suits, "
                                 + "it's useless without...something inside. Give it a name."
                                 + "\n[HINT]: Try: " + command + " [description] ...");
+        }
+
+        if (command.equals("find")) {
+            if (tL.isEmpty()) {
+                throw new AftonException("You're hunting for shadows in an empty room. "
+                    + "There is nothing here to find... yet."
+                    + "\n[HINT]: Add a task before you attempt to find it");
+            }
+            return;
         }
         String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
         int noOfBy = 0;
@@ -182,18 +192,29 @@ public class Parser {
         // Any other unrecognised command
         default:
             throw new AftonException("'" + command + "'? I don't recognize that. Don't waste my time with nonsense. "
-                + "\n[HINT]: I only respond to: todo, deadline, event, list, mark, unmark, or delete.");
+                + "\n[HINT]: I only respond to: todo, deadline, event, list, find, mark, unmark, or delete.");
         }
 
     }
 
     /**
-     * Lists all valid tasks inputted and stored in the task list.
+     * Lists all valid tasks inputted and stored in this task list.
      */
 
     public static void listTasks() {
         for (int i = 0; i < tL.size(); i++) {
             afton.speak(String.format("%d.%s", (i + 1), tL.get(i)));
+        }
+    }
+
+    /**
+     * Displays all valid tasks in a given list of tasks
+     * Used for dislpaying search results
+     * @param l List of tasks to display
+     */
+    public static void listTasks(List<Task> l) {
+        for (int i = 0; i < l.size(); i++) {
+            afton.speak(String.format("%d.%s", (i + 1), l.get(i)));
         }
     }
 
@@ -270,7 +291,22 @@ public class Parser {
                 : "There are " + tL.size() + " souls left to manage. We aren't finished yet";
             afton.speak(delMessage);
             break;
-
+        case "find":
+            String searchTerm = details[0];
+            List<Task> results = tL.findTasks(searchTerm);
+            if (results.isEmpty()) {
+                afton.speak("A fruitless search. "
+                    + "That particular memory doesn't exist in my records. Are you sure you didn't imagine it?"
+                );
+            } else {
+                String findMessage = (results.size() == 1)
+                    ? "There it is. Standing all alone in the dark. I've brought it to the light for you."
+                    : "I've found them. The fragments you were looking for... "
+                    + "they couldn't stay hidden from me forever.";
+                afton.speak(findMessage);
+                listTasks(results);
+            }
+            break;
         default:
             listTasks();
             break;
