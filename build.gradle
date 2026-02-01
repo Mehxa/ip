@@ -39,6 +39,7 @@ application {
 shadowJar {
     archiveBaseName = "purpleguy"
     archiveClassifier = null
+    archiveFileName = "purpleguy.jar"
 }
 
 run{
