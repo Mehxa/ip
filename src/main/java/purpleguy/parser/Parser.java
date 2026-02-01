@@ -175,14 +175,14 @@ public class Parser {
                 }
             } catch (NumberFormatException e) {
                 throw new AftonException("'" + details[0] + "' is not a number."
-                + "I require mathematical precision, not guesswork."
-                + "\n[HINT]: Provide a valid integer index.");
+                    + "I require mathematical precision, not guesswork."
+                    + "\n[HINT]: Provide a valid integer index.");
             }
             break;
         // Any other unrecognised command
         default:
             throw new AftonException("'" + command + "'? I don't recognize that. Don't waste my time with nonsense. "
-            + "\n[HINT]: I only respond to: todo, deadline, event, list, mark, unmark, or delete.");
+                + "\n[HINT]: I only respond to: todo, deadline, event, list, mark, unmark, or delete.");
         }
 
     }
