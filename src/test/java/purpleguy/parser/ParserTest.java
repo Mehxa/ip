@@ -7,15 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import purpleguy.exception.AftonException;
 import purpleguy.tasklist.TaskList;
-import purpleguy.ui.AftonUI;
 
 public class ParserTest {
-    private AftonUI testUi = new AftonUI();
     private TaskList taskList = new TaskList();
 
     @Test
     public void missing_info_test() {
-        Parser testParser = new Parser(testUi, taskList);
+        Parser testParser = new Parser(taskList);
         // Test missing task name
         Exception exception = assertThrows(AftonException.class, () -> testParser.parse("todo"));
         assertEquals("A hollow entry? Much like those empty suits, "
