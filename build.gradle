@@ -12,8 +12,6 @@ repositories {
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
-<<<<<<< Updated upstream
-=======
     
     String javaFxVersion = '17.0.7'
 
@@ -29,7 +27,6 @@ dependencies {
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
     implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
->>>>>>> Stashed changes
 }
 
 test {
@@ -51,11 +48,7 @@ checkstyle {
 }
 
 application {
-<<<<<<< Updated upstream
-    mainClass.set("purpleguy.PurpleGuy")
-=======
     mainClass.set("purpleguy.Launcher")
->>>>>>> Stashed changes
 }
 
 shadowJar {
