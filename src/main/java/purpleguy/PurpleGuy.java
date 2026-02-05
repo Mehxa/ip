@@ -17,7 +17,7 @@ public class PurpleGuy {
 
     public static void main(String[] args) {
         storageFile.readTL(taskList);
-        Parser p = new Parser(afton, taskList);
+        Parser p = new Parser(taskList);
         afton.initialise();
         String userInput = afton.readInput();
         while (!userInput.equals("bye")) {
@@ -27,7 +27,7 @@ public class PurpleGuy {
                         + " Speak, or stay out of my wires."
                         + "\n[HINT]: Type a valid command (list, todo, deadline, event, mark, unmark).");
                 }
-                p.parse(userInput);
+                afton.speak(p.parse(userInput));
             } catch (AftonException e) {
                 afton.speak(e.getMessage());
             }
@@ -35,5 +35,26 @@ public class PurpleGuy {
         }
         afton.shutDown();
         storageFile.storeTL(taskList);
+    }
+
+    public void initialiseStorage() {
+        storageFile.readTL(taskList);
+    }
+
+    public String getResponse(String input) {
+        Parser p = new Parser(taskList);
+        if (input.equals("bye")) {
+            afton.shutDown();
+        }
+        try {
+            if (input.trim().isEmpty()) {
+                throw new AftonException("Silence? You wake me only to offer... nothing?"
+                    + " Speak, or stay out of my wires."
+                    + "\n[HINT]: Type a valid command (list, todo, deadline, event, mark, unmark).");
+            }
+            return p.parse(input);
+        } catch (AftonException e) {
+            return e.getMessage();
+        }
     }
 }

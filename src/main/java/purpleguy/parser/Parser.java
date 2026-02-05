@@ -10,13 +10,11 @@ import purpleguy.Task;
 import purpleguy.ToDo;
 import purpleguy.exception.AftonException;
 import purpleguy.tasklist.TaskList;
-import purpleguy.ui.AftonUI;
 
 /**
  * Parses and executes the commands inputted by the user
  */
 public class Parser {
-    private static AftonUI afton;
     private static TaskList tL;
 
     /**
@@ -24,8 +22,7 @@ public class Parser {
      * @param ui AftonUI for printing out success and error messages
      * @param taskList ArrayList of Tasks, the current taskList
      */
-    public Parser(AftonUI ui, TaskList taskList) {
-        afton = ui;
+    public Parser(TaskList taskList) {
         tL = taskList;
     }
 
@@ -34,10 +31,10 @@ public class Parser {
      * @param input String input from user, to be parsed
      * @throws AftonException If error is occured during validateCommand
      */
-    public void parse(String input) throws AftonException {
+    public String parse(String input) throws AftonException {
         String[] caseVars = input.split("\\s+", 2); // To extract command
         validateCommand(caseVars);
-        runCommand(caseVars);
+        return runCommand(caseVars);
     }
 
     /**
@@ -199,37 +196,43 @@ public class Parser {
 
     /**
      * Lists all valid tasks inputted and stored in this task list.
+     * @return String of all content in list
      */
 
-    public static void listTasks() {
+    public static String listTasks() {
+        String listContent = "";
         for (int i = 0; i < tL.size(); i++) {
-            afton.speak(String.format("%d.%s", (i + 1), tL.get(i)));
+            listContent += String.format("%d.%s\n", (i + 1), tL.get(i));
         }
+        return listContent;
     }
 
     /**
      * Displays all valid tasks in a given list of tasks
      * Used for dislpaying search results
      * @param l List of tasks to display
+     * @return String of all content in list
      */
-    public static void listTasks(List<Task> l) {
+    public static String listTasks(List<Task> l) {
+        String listContent = "";
         for (int i = 0; i < l.size(); i++) {
-            afton.speak(String.format("%d.%s", (i + 1), l.get(i)));
+            listContent += String.format("%d.%s\n", (i + 1), l.get(i));
         }
+        return listContent;
     }
 
     /**
      * Executes the command inputted by the user
      * Retrieves details needed from caseVars
      * @param caseVars String array of variables derived from the user input
+     * @return Output message of the commands
      */
-    public static void runCommand(String[] caseVars) {
+    public static String runCommand(String[] caseVars) {
         int index;
         String taskName;
+        String resultString = "";
         if (caseVars[0].equals("list")) {
-            listTasks();
-            System.out.println();
-            return;
+            return listTasks();
         }
         String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
         switch (caseVars[0]) {
@@ -237,25 +240,25 @@ public class Parser {
             index = Integer.parseInt(caseVars[1]) - 1;
             Task mTask = tL.get(index);
             mTask.mark();
-            afton.speak("Done. It's finally... over. For now.");
-            afton.speak(mTask + "\n");
+            resultString += "Done. It's finally... over. For now.\n";
+            resultString += mTask + "\n";
             break;
 
         case "unmark":
             index = Integer.parseInt(caseVars[1]) - 1;
             Task umTask = tL.get(index);
             umTask.unmark();
-            afton.speak("Back again? It seems some things just won't stay buried.");
-            afton.speak(umTask + "\n");
+            resultString += "Back again? It seems some things just won't stay buried.\n";
+            resultString += umTask + "\n";
             break;
 
         case "todo":
             taskName = details[0];
             Task td = new ToDo(taskName);
             tL.addTask(td);
-            afton.speak("Another? Let's see how long this one lasts.");
-            afton.speak(td.toString());
-            afton.speak(tL.size() + " entries remain in your little list now.");
+            resultString += "Another? Let's see how long this one lasts.\n";
+            resultString += td.toString() + "\n";
+            resultString += tL.size() + " entries remain in your little list now.\n";
             break;
 
         case "deadline":
@@ -263,9 +266,9 @@ public class Parser {
             Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
                 .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             tL.addTask(dlTask);
-            afton.speak("A deadline? How fitting. Time is a luxury most of them didn't have.");
-            afton.speak(dlTask.toString());
-            afton.speak("That's " + tL.size() + " clocks ticking in the dark");
+            resultString += "A deadline? How fitting. Time is a luxury most of them didn't have.\n";
+            resultString += dlTask.toString() + "\n";
+            resultString += "That's " + tL.size() + " clocks ticking in the dark\n";
             break;
 
         case "event":
@@ -274,43 +277,44 @@ public class Parser {
                 details[1].replace("/from", "").trim(),
                 details[2].replace("/to", "").trim());
             tL.addTask(evTask);
-            afton.speak("");
-            afton.speak(evTask.toString());
-            afton.speak("That makes " + tL.size() + " acts to follow.");
+            resultString += evTask.toString() + "\n";
+            resultString += "That makes " + tL.size() + " acts to follow.\n";
             break;
 
         case "delete":
             index = Integer.parseInt(caseVars[1]) - 1;
             Task delTask = tL.get(index);
             tL.remove(index);
-            afton.speak("Erased. A pity... I was starting to like that one."
-                + " Now no one will even know it existed.");
-            afton.speak(delTask.toString());
+            resultString += "Erased. A pity... I was starting to like that one."
+                + " Now no one will even know it existed.\n";
+            resultString += delTask.toString() + "\n";
             String delMessage = (tL.size() == 0)
-                ? "The room is empty. Silence at last... but for how long?"
-                : "There are " + tL.size() + " souls left to manage. We aren't finished yet";
-            afton.speak(delMessage);
+                ? "The room is empty. Silence at last... but for how long?\n"
+                : "There are " + tL.size() + " souls left to manage. We aren't finished yet.\n";
+            resultString += delMessage;
             break;
+
         case "find":
             String searchTerm = details[0];
             List<Task> results = tL.findTasks(searchTerm);
             if (results.isEmpty()) {
-                afton.speak("A fruitless search. "
-                    + "That particular memory doesn't exist in my records. Are you sure you didn't imagine it?"
-                );
+                resultString += "A fruitless search. "
+                    + "That particular memory doesn't exist in my records. "
+                    + "Are you sure you didn't imagine it?\n";
             } else {
                 String findMessage = (results.size() == 1)
-                    ? "There it is. Standing all alone in the dark. I've brought it to the light for you."
+                    ? "There it is. Standing all alone in the dark. I've brought it to the light for you.\n"
                     : "I've found them. The fragments you were looking for... "
-                    + "they couldn't stay hidden from me forever.";
-                afton.speak(findMessage);
-                listTasks(results);
+                    + "they couldn't stay hidden from me forever.\n";
+                resultString += findMessage;
+                resultString += listTasks(results);
             }
             break;
         default:
             listTasks();
             break;
         }
+        return resultString;
     }
 
 }
