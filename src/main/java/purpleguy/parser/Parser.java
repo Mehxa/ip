@@ -22,6 +22,12 @@ public class Parser {
                 + " but left the ending in a void."
                 + " Tell me when /to finish it"
                 + "\n[HINT]: Provide the timing details immediately after the /to tag";
+    private static final String TODO_ADD_MESSAGE = "Another? Let's see how long this one lasts.\n %s\n"
+                + "%d entries remain in your little list now \n";
+    private static final String DEADLINE_ADD_MESSAGE = "A deadline? How fitting. "
+                + "Time is a luxury most of them didn't have.\n %s \n"
+                + "That's %d clocks ticking in the dark\n";
+    private static final String EVENT_ADD_MESSAGE = "%s\nThat makes %s acts to follow.\n";
 
     private static TaskList tL;
 
@@ -158,17 +164,14 @@ public class Parser {
             index = Integer.parseInt(caseVars[1]) - 1;
             Task umTask = tL.get(index);
             umTask.unmark();
-            resultString += "Back again? It seems some things just won't stay buried.\n";
-            resultString += umTask + "\n";
+            resultString = "Back again? It seems some things just won't stay buried.\n" + umTask + "\n";
             break;
 
         case "todo":
             taskName = details[0];
             Task td = new ToDo(taskName);
             tL.addTask(td);
-            resultString += "Another? Let's see how long this one lasts.\n";
-            resultString += td.toString() + "\n";
-            resultString += tL.size() + " entries remain in your little list now.\n";
+            resultString = formatTaskMessage(td, TODO_ADD_MESSAGE);
             break;
 
         case "deadline":
@@ -176,9 +179,7 @@ public class Parser {
             Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
                 .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             tL.addTask(dlTask);
-            resultString += "A deadline? How fitting. Time is a luxury most of them didn't have.\n";
-            resultString += dlTask.toString() + "\n";
-            resultString += "That's " + tL.size() + " clocks ticking in the dark\n";
+            resultString = formatTaskMessage(dlTask, DEADLINE_ADD_MESSAGE);
             break;
 
         case "event":
@@ -187,8 +188,7 @@ public class Parser {
                 details[1].replace("/from", "").trim(),
                 details[2].replace("/to", "").trim());
             tL.addTask(evTask);
-            resultString += evTask.toString() + "\n";
-            resultString += "That makes " + tL.size() + " acts to follow.\n";
+            resultString = formatTaskMessage(evTask, EVENT_ADD_MESSAGE);
             break;
 
         case "delete":
@@ -238,6 +238,10 @@ public class Parser {
             throw new AftonException("There is nothing here to silence. You haven't even started your work. "
                                     + "\n[HINT]: Add a task before trying to list");
         }
+    }
+
+    private static String formatTaskMessage(Task task, String message) {
+        return String.format(message, task.toString(), tL.size());
     }
 
     private static void validateMissingInfo(String[] caseVars, String command) throws AftonException {
