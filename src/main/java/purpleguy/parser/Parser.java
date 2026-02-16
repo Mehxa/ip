@@ -200,6 +200,7 @@ public class Parser {
      */
 
     public static String listTasks() {
+        assert !tL.isEmpty();
         String listContent = "";
         for (int i = 0; i < tL.size(); i++) {
             listContent += String.format("%d.%s\n", (i + 1), tL.get(i));
@@ -237,6 +238,7 @@ public class Parser {
         String[] details = caseVars[1].trim().split("\\s+(?=/)| ^\\s+ | \\s+");
         switch (caseVars[0]) {
         case "mark":
+            assert !tL.isEmpty();
             index = Integer.parseInt(caseVars[1]) - 1;
             Task mTask = tL.get(index);
             mTask.mark();
@@ -245,6 +247,7 @@ public class Parser {
             break;
 
         case "unmark":
+            assert !tL.isEmpty();
             index = Integer.parseInt(caseVars[1]) - 1;
             Task umTask = tL.get(index);
             umTask.unmark();
@@ -282,6 +285,7 @@ public class Parser {
             break;
 
         case "delete":
+            assert !tL.isEmpty();
             index = Integer.parseInt(caseVars[1]) - 1;
             Task delTask = tL.get(index);
             tL.remove(index);
@@ -295,6 +299,7 @@ public class Parser {
             break;
 
         case "find":
+            assert !tL.isEmpty();
             String searchTerm = details[0];
             List<Task> results = tL.findTasks(searchTerm);
             if (results.isEmpty()) {
