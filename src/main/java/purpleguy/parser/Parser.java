@@ -117,9 +117,10 @@ public class Parser {
 
     public static String listTasks() {
         assert !tL.isEmpty();
+        List<Task> sortedtL = tL.getTasksSortedByPriority();
         String listContent = "";
         for (int i = 0; i < tL.size(); i++) {
-            listContent += String.format("%d.%s\n", (i + 1), tL.get(i));
+            listContent += String.format("%d.%s\n", (i + 1), sortedtL.get(i));
         }
         return listContent;
     }

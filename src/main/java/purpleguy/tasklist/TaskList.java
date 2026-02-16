@@ -1,6 +1,8 @@
 package purpleguy.tasklist;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import purpleguy.Task;
 
@@ -40,5 +42,11 @@ public class TaskList {
 
     public List<String> toData() {
         return tL.stream().map(x -> x.toData()).toList();
+    }
+
+    public List<Task> getTasksSortedByPriority() {
+        return tL.stream()
+                .sorted(Comparator.comparing(Task::getPriority).reversed())
+                .collect(Collectors.toList());
     }
 }
