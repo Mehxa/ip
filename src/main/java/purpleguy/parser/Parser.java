@@ -116,6 +116,7 @@ public class Parser {
      */
 
     public static String listTasks() {
+        assert !tL.isEmpty();
         String listContent = "";
         for (int i = 0; i < tL.size(); i++) {
             listContent += String.format("%d.%s\n", (i + 1), tL.get(i));
@@ -151,10 +152,12 @@ public class Parser {
         String[] details = caseVars[1].trim().split("\s+(?=/)| ^\s+ | \s+");
         switch (caseVars[0]) {
         case "mark":
+            assert !tL.isEmpty();
             resultString = markTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
         case "unmark":
+            assert !tL.isEmpty();
             resultString = unmarkTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
@@ -171,10 +174,12 @@ public class Parser {
             break;
 
         case "delete":
+            assert !tL.isEmpty();
             resultString = deleteTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
         case "find":
+            assert !tL.isEmpty();
             resultString = findTask(details);
             break;
 
