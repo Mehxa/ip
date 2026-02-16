@@ -144,8 +144,6 @@ public class Parser {
      * @return Output message of the commands
      */
     public static String runCommand(String[] caseVars) {
-        int index;
-        String taskName;
         String resultString = "";
         if (caseVars[0].equals("list")) {
             return listTasks();
@@ -153,73 +151,33 @@ public class Parser {
         String[] details = caseVars[1].trim().split("\s+(?=/)| ^\s+ | \s+");
         switch (caseVars[0]) {
         case "mark":
-            index = Integer.parseInt(caseVars[1]) - 1;
-            Task mTask = tL.get(index);
-            mTask.mark();
-            resultString += "Done. It's finally... over. For now.\n";
-            resultString += mTask + "\n";
+            resultString = markTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
         case "unmark":
-            index = Integer.parseInt(caseVars[1]) - 1;
-            Task umTask = tL.get(index);
-            umTask.unmark();
-            resultString = "Back again? It seems some things just won't stay buried.\n" + umTask + "\n";
+            resultString = unmarkTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
         case "todo":
-            taskName = details[0];
-            Task td = new ToDo(taskName);
-            tL.addTask(td);
-            resultString = formatTaskMessage(td, TODO_ADD_MESSAGE);
+            resultString = createTodo(details);
             break;
 
         case "deadline":
-            taskName = details[0];
-            Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
-                .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-            tL.addTask(dlTask);
-            resultString = formatTaskMessage(dlTask, DEADLINE_ADD_MESSAGE);
+            resultString = createDeadline(details);
             break;
 
         case "event":
-            taskName = details[0];
-            Task evTask = new Event(taskName,
-                details[1].replace("/from", "").trim(),
-                details[2].replace("/to", "").trim());
-            tL.addTask(evTask);
-            resultString = formatTaskMessage(evTask, EVENT_ADD_MESSAGE);
+            resultString = createEvent(details);
             break;
 
         case "delete":
-            index = Integer.parseInt(caseVars[1]) - 1;
-            Task delTask = tL.get(index);
-            tL.remove(index);
-            resultString += "Erased. A pity... I was starting to like that one."
-                + " Now no one will even know it existed.\n";
-            resultString += delTask.toString() + "\n";
-            String delMessage = (tL.size() == 0)
-                ? "The room is empty. Silence at last... but for how long?\n"
-                : "There are " + tL.size() + " souls left to manage. We aren't finished yet.\n";
-            resultString += delMessage;
+            resultString = deleteTask(Integer.parseInt(caseVars[1]) - 1);
             break;
 
         case "find":
-            String searchTerm = details[0];
-            List<Task> results = tL.findTasks(searchTerm);
-            if (results.isEmpty()) {
-                resultString += "A fruitless search. "
-                    + "That particular memory doesn't exist in my records. "
-                    + "Are you sure you didn't imagine it?\n";
-            } else {
-                String findMessage = (results.size() == 1)
-                    ? "There it is. Standing all alone in the dark. I've brought it to the light for you.\n"
-                    : "I've found them. The fragments you were looking for... "
-                    + "they couldn't stay hidden from me forever.\n";
-                resultString += findMessage;
-                resultString += listTasks(results);
-            }
+            resultString = findTask(details);
             break;
+
         default:
             listTasks();
             break;
@@ -370,6 +328,74 @@ public class Parser {
                 + "I require mathematical precision, not guesswork."
                 + "\n[HINT]: Provide a valid integer index.");
         }
+    }
+
+    private static String markTask(int index) {
+        Task mTask = tL.get(index);
+        mTask.mark();
+        return "Done. It's finally... over. For now.\n" + mTask + "\n";
+    }
+
+    private static String unmarkTask(int index) {
+        Task umTask = tL.get(index);
+        umTask.unmark();
+        return "Back again? It seems some things just won't stay buried.\n" + umTask + "\n";
+    }
+
+    private static String createTodo(String[] details) {
+        String taskName = details[0];
+        Task td = new ToDo(taskName);
+        tL.addTask(td);
+        return formatTaskMessage(td, TODO_ADD_MESSAGE);
+    }
+
+    private static String createDeadline(String[] details) {
+        String taskName = details[0];
+        Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
+            .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        tL.addTask(dlTask);
+        return formatTaskMessage(dlTask, DEADLINE_ADD_MESSAGE);
+    }
+
+    private static String createEvent(String[] details) {
+        String taskName = details[0];
+        Task evTask = new Event(taskName,
+            details[1].replace("/from", "").trim(),
+            details[2].replace("/to", "").trim());
+        tL.addTask(evTask);
+        return formatTaskMessage(evTask, EVENT_ADD_MESSAGE);
+    }
+
+    private static String deleteTask(int index) {
+        Task delTask = tL.get(index);
+        tL.remove(index);
+        String resultString = "Erased. A pity... I was starting to like that one."
+            + " Now no one will even know it existed.\n";
+        resultString += delTask.toString() + "\n";
+        String delMessage = (tL.size() == 0)
+            ? "The room is empty. Silence at last... but for how long?\n"
+            : "There are " + tL.size() + " souls left to manage. We aren't finished yet.\n";
+        resultString += delMessage;
+        return resultString;
+    }
+
+    private static String findTask(String[] details) {
+        String searchTerm = details[0];
+        List<Task> results = tL.findTasks(searchTerm);
+        String resultString = "";
+        if (results.isEmpty()) {
+            resultString = "A fruitless search. "
+                + "That particular memory doesn't exist in my records. "
+                + "Are you sure you didn't imagine it?\n";
+        } else {
+            String findMessage = (results.size() == 1)
+                ? "There it is. Standing all alone in the dark. I've brought it to the light for you.\n"
+                : "I've found them. The fragments you were looking for... "
+                + "they couldn't stay hidden from me forever.\n";
+            resultString += findMessage;
+            resultString += listTasks(results);
+        }
+        return resultString;
     }
 
 }
