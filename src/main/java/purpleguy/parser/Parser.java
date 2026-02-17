@@ -29,6 +29,29 @@ public class Parser {
                 + "That's %d clocks ticking in the dark\n";
     private static final String EVENT_ADD_MESSAGE = "%s\nThat makes %s acts to follow.\n";
 
+    // Help messages
+    private static final String TODO_HELP_MESSAGE = "Command: todo [name]\n"
+                + "For your mundane daily tasks\n";
+    private static final String DEADLINE_HELP_MESSAGE = "Command: deadline [name] /by [time]\n"
+                + "[time] must follow yyyy-MM-dd HH:mm format\n"
+                + "When the clock is ticking against you\n";
+    private static final String EVENT_HELP_MESSAGE = "Command: event [name] /from [time] /to [time]\n"
+                + "For the performances you must attend\n";
+    private static final String LIST_HELP_MESSAGE = "Command: list\n"
+                + "Do not add any words after list\n"
+                + "To see the current residents of my ledger.\n";
+    private static final String FIND_HELP_MESSAGE = "Command: find [keyword]\n"
+                + "To hunt for fragments of the past\n";
+    private static final String MARK_HELP_MESSAGE = "Command: mark [index]\n"
+                + "[index] must be a number\n"
+                + "Use the index to silence a record. Once marked, it belongs to the past.\n";
+    private static final String UNMARK_HELP_MESSAGE = "Command: unmark [index]\n"
+                + "[index] must be a number\n"
+                + "Nothing ever stays dead here. If you've made a mistake,"
+                + " I can drag that record back into the light.\n";
+    private static final String DELETE_HELP_MESSAGE = "Command: delete [index]\n"
+                + "[index] must be a number\n"
+                + "To erase something...or someone...forever\n";
     private static TaskList tL;
 
     /**
@@ -63,6 +86,11 @@ public class Parser {
         // which does not require extra parameters
         if (command.equals("list")) {
             validateList(caseVars);
+            return;
+        }
+
+        if (command.equals("help")) {
+            validateHelp();
             return;
         }
 
@@ -149,6 +177,11 @@ public class Parser {
         if (caseVars[0].equals("list")) {
             return listTasks();
         }
+
+        if (caseVars[0].equals("help") && caseVars.length == 1) {
+            return displayAllHelp();
+        }
+
         String[] details = caseVars[1].trim().split("\s+(?=/)| ^\s+ | \s+");
         switch (caseVars[0]) {
         case "mark":
@@ -181,6 +214,10 @@ public class Parser {
         case "find":
             assert !tL.isEmpty();
             resultString = findTask(details);
+            break;
+
+        case "help":
+            resultString = displayHelp(details[0]);
             break;
 
         default:
@@ -335,6 +372,10 @@ public class Parser {
         }
     }
 
+    private static void validateHelp() throws AftonException {
+
+    }
+
     private static String markTask(int index) {
         Task mTask = tL.get(index);
         mTask.mark();
@@ -401,6 +442,50 @@ public class Parser {
             resultString += listTasks(results);
         }
         return resultString;
+    }
+
+    private static String displayHelp(String command) {
+        String resultString = "";
+        switch (command) {
+        case "list":
+            resultString = LIST_HELP_MESSAGE;
+            break;
+        case "todo":
+            resultString = TODO_HELP_MESSAGE;
+            break;
+        case "deadline":
+            resultString = DEADLINE_HELP_MESSAGE;
+            break;
+        case "event":
+            resultString = EVENT_HELP_MESSAGE;
+            break;
+        case "mark":
+            resultString = MARK_HELP_MESSAGE;
+            break;
+        case "unmark":
+            resultString = UNMARK_HELP_MESSAGE;
+            break;
+        case "find":
+            resultString = FIND_HELP_MESSAGE;
+            break;
+        case "delete":
+            resultString = DELETE_HELP_MESSAGE;
+            break;
+        default:
+            break;
+        }
+        return resultString;
+    }
+
+    private static String displayAllHelp() {
+        return LIST_HELP_MESSAGE
+            + TODO_HELP_MESSAGE + "\n"
+            + DEADLINE_HELP_MESSAGE + "\n"
+            + EVENT_HELP_MESSAGE + "\n"
+            + MARK_HELP_MESSAGE + "\n"
+            + UNMARK_HELP_MESSAGE + "\n"
+            + FIND_HELP_MESSAGE + "\n"
+            + DELETE_HELP_MESSAGE;
     }
 
 }
