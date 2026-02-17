@@ -5,33 +5,25 @@ package purpleguy;
  */
 public class Task {
     private String name;
-    private Boolean isMarked;
-    private int priority;
+    private Boolean marked;
 
     protected Task(String name) {
         this.name = name;
-        this.isMarked = false;
-        this.priority = 3;
-    }
-
-    protected Task(String name, int priority) {
-        this.name = name;
-        this.isMarked = false;
-        this.priority = priority;
+        this.marked = false;
     }
 
     /**
      * Changes a task's status to be complete/marked
      */
     public void mark() {
-        this.isMarked = true;
+        this.marked = true;
     }
 
     /**
      * Changes a task's status to be incomplete/unmarked
      */
     public void unmark() {
-        this.isMarked = false;
+        this.marked = false;
     }
 
     /**
@@ -39,7 +31,7 @@ public class Task {
      * @return Marked status represented by X or " "
      */
     public String getStatusString() {
-        return (isMarked ? "X" : " ");
+        return (marked ? "X" : " ");
     }
 
     /**
@@ -49,10 +41,6 @@ public class Task {
      */
     public boolean containsString(String s) {
         return this.name.contains(s);
-    }
-
-    public int getPriority() {
-        return this.priority;
     }
 
     /**
