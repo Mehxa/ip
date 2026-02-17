@@ -2,6 +2,7 @@ package purpleguy.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 import purpleguy.Deadline;
@@ -89,8 +90,9 @@ public class Parser {
             return;
         }
 
-        if (command.equals("help")) {
-            validateHelp();
+        // This is to let allHelp pass the default case
+        // Validation for the normal help is done later
+        if (command.equals("help") && caseVars.length == 1) {
             return;
         }
 
@@ -129,6 +131,9 @@ public class Parser {
             // Fallthrough
         case "delete":
             validateIndex(details, command);
+            break;
+        case "help":
+            validateHelp(details[0]);
             break;
         // Any other unrecognised command
         default:
@@ -372,8 +377,13 @@ public class Parser {
         }
     }
 
-    private static void validateHelp() throws AftonException {
-
+    private static void validateHelp(String command) throws AftonException {
+        String[] commands = {"todo", "deadline", "event", "list", "mark", "unmark", "find", "delete"};
+        if (!Arrays.stream(commands).anyMatch(command.toLowerCase()::equals)) {
+            throw new AftonException("Are you trying to find a secret door? There is no such command in my ledger."
+            + " Stick to the protocols I gave you, or don't speak at all."
+            + "\n[HINT]: For a list of all valid commands try inputting 'help' only");
+        }
     }
 
     private static String markTask(int index) {
