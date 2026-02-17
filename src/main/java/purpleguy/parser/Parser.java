@@ -2,9 +2,9 @@ package purpleguy.parser;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
+import purpleguy.CommandValidator;
 import purpleguy.Deadline;
 import purpleguy.Event;
 import purpleguy.Task;
@@ -16,13 +16,6 @@ import purpleguy.tasklist.TaskList;
  * Parses and executes the commands inputted by the user
  */
 public class Parser {
-    private static final String ERROR_MISSING_FROM_VALUE = "The stage is set, but the actors have no cues for /from."
-                + " Provide a time, or the curtains stay closed."
-                + "\n[HINT]: Provide the timing details immediately after the /from tag";
-    private static final String ERROR_MISSING_TO_VALUE = "You've started the performance,"
-                + " but left the ending in a void."
-                + " Tell me when /to finish it"
-                + "\n[HINT]: Provide the timing details immediately after the /to tag";
     private static final String TODO_ADD_MESSAGE = "Another? Let's see how long this one lasts.\n %s\n"
                 + "%d entries remain in your little list now \n";
     private static final String DEADLINE_ADD_MESSAGE = "A deadline? How fitting. "
@@ -53,7 +46,9 @@ public class Parser {
     private static final String DELETE_HELP_MESSAGE = "Command: delete [index]\n"
                 + "[index] must be a number\n"
                 + "To erase something...or someone...forever\n";
+
     private static TaskList tL;
+    private final CommandValidator validator;
 
     /**
      * Creates a new Parser object
@@ -62,6 +57,7 @@ public class Parser {
      */
     public Parser(TaskList taskList) {
         tL = taskList;
+        validator = new CommandValidator();
     }
 
     /**
@@ -71,76 +67,12 @@ public class Parser {
      */
     public String parse(String input) throws AftonException {
         String[] caseVars = input.split("\\s+", 2); // To extract command
-        validateCommand(caseVars);
-        return runCommand(caseVars);
-    }
-
-    /**
-     * Validates input given by the user
-     * @param caseVars String array of variables derived from the user input
-     * @throws AftonException If input is invalid: Missing tag/task name, improper tag/command usage
-     */
-
-    public static void validateCommand(String[] caseVars) throws AftonException {
         String command = caseVars[0].toLowerCase();
-        // Resolving list first as it is the only command
-        // which does not require extra parameters
-        if (command.equals("list")) {
-            validateList(caseVars);
-            return;
-        }
-
-        // This is to let allHelp pass the default case
-        // Validation for the normal help is done later
-        if (command.equals("help") && caseVars.length == 1) {
-            return;
-        }
-
-        // Command missing essential information
-        validateMissingInfo(caseVars, command);
-
-        if (command.equals("find")) {
-            validateFind();
-            return;
-        }
-
-        String[] details = caseVars[1].trim().split("\s+(?=/)| ^\s+ | \s+");
-
-        switch (command) {
-        case "todo":
-            // Todo command inputted with /by, /from or /to
-            if (details.length > 1) {
-                throw new AftonException("A simple task shouldn't have extra baggage."
-                    + " Keep it clean... like a well-wiped crime scene."
-                    + "\n[HINT]: Todo tasks do not use /by, /from, or /to tags.");
-            }
-            break;
-
-        case "deadline":
-            validateDeadline(details);
-            break;
-
-        case "event":
-            validateEvent(details);
-            break;
-
-        case "mark":
-            // Fallthrough
-            // Mark unmark and delete go through the same validation process
-        case "unmark":
-            // Fallthrough
-        case "delete":
-            validateIndex(details, command);
-            break;
-        case "help":
-            validateHelp(details[0]);
-            break;
-        // Any other unrecognised command
-        default:
-            throw new AftonException("'" + command + "'? I don't recognize that. Don't waste my time with nonsense. "
-                + "\n[HINT]: I only respond to: todo, deadline, event, list, find, mark, unmark, or delete.");
-        }
-
+        String[] details = (caseVars.length < 2 || caseVars[1].trim().isEmpty())
+            ? new String[0]
+            : caseVars[1].trim().split("\s+(?=/)| ^\s+ | \s+");
+        validator.validate(command, details, tL);
+        return runCommand(caseVars);
     }
 
     /**
@@ -232,158 +164,8 @@ public class Parser {
         return resultString;
     }
 
-    private static void validateList(String[] caseVars) throws AftonException {
-        if (caseVars.length > 1) {
-            throw new AftonException("Do you think I'm blind? "
-                                    + "I don't need your 'extra information' to view my own ledger. "
-                                    + "Just say the word and be quiet."
-                                    + "\n[HINT]: The 'list' command requires no additional words.");
-        }
-        if (tL.isEmpty()) {
-            throw new AftonException("There is nothing here to silence. You haven't even started your work. "
-                                    + "\n[HINT]: Add a task before trying to list");
-        }
-    }
-
     private static String formatTaskMessage(Task task, String message) {
         return String.format(message, task.toString(), tL.size());
-    }
-
-    private static void validateMissingInfo(String[] caseVars, String command) throws AftonException {
-        if (caseVars.length < 2 || caseVars[1].trim().isEmpty() || caseVars[1].startsWith("/")) {
-            // More specific error message for missing index rather than missing name
-            if (command.equals("mark") || command.equals("unmark") || command.equals("delete")) {
-                throw new AftonException("You're pointing at thin air. Give me a number, or step away. "
-                                    + "\n[HINT]: Usage: " + command + " [task index number]");
-            }
-            throw new AftonException("A hollow entry? Much like those empty suits, "
-                                + "it's useless without...something inside. Give it a name."
-                                + "\n[HINT]: Try: " + command + " [description] ...");
-        }
-    }
-
-    private static void validateFind() throws AftonException {
-        if (tL.isEmpty()) {
-            throw new AftonException("You're hunting for shadows in an empty room. "
-                    + "There is nothing here to find... yet."
-                    + "\n[HINT]: Add a task before you attempt to find it");
-        }
-    }
-
-    private static int countTags(String[] details, String tag) {
-        int count = 0;
-        for (int i = 0; i < details.length; i++) {
-            String detail = details[i].trim();
-            if (detail.startsWith(tag)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private static int getTagIndex(String[] details, String tag) {
-        int index = -1;
-        for (int i = 0; i < details.length; i++) {
-            String detail = details[i].trim();
-            if (detail.startsWith(tag)) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
-    private static void validateTagContent(String[] details, int index,
-        String tag, String errorMessage) throws AftonException {
-        if (details[index].trim().equals(tag)) {
-            throw new AftonException(errorMessage);
-        }
-    }
-
-    private static void validateDeadline(String[] details) throws AftonException {
-        int noOfBy = countTags(details, "/by");
-        int noOfFrom = countTags(details, "/from");
-        int noOfTo = countTags(details, "/to");
-
-        if (noOfFrom > 0 || noOfTo > 0) {
-            throw new AftonException("You're confusing a deadline with an event."
-                + " Only one end matters here."
-                + "\n[HINT]: Remove /from and /to. Only use /by.");
-        }
-
-        if (noOfBy == 0) {
-            throw new AftonException("How disappointing. You forgot the '/by' tag."
-                + " Precision is the difference between a masterpiece and a... mess."
-                + "\n[HINT]: A deadline requires a '/by [time]' marker.");
-        }
-        if (noOfBy > 1) {
-            throw new AftonException("Too many endings? Even I only needed one."
-                + " One /by is enough."
-                + "\n[HINT]: Ensure you only have one '/by' tag.");
-        }
-
-        if (details[1].trim().equals("/by")) {
-            throw new AftonException("A tag with no data? You're stalling. Tell me *when* the clock stops for "
-                + details[0]
-                + "\n[HINT]: Provide the timing details immediately after the /by tag");
-        }
-    }
-
-    private static void validateEvent(String[] details) throws AftonException {
-        int noOfBy = countTags(details, "/by");
-
-        if (noOfBy > 0) {
-            throw new AftonException("Events don't have deadlines; they have schedules. Lose the /by tag."
-                + "\n[HINT]: Replace '/by' with '/from' and '/to'.");
-        }
-
-        int noOfFrom = countTags(details, "/from");
-        int noOfTo = countTags(details, "/to");
-
-        if (noOfFrom != 1 || noOfTo != 1) {
-            throw new AftonException("The stage is set, but the timing is incomplete."
-                + " I require exactly one start and one end."
-                + "\n[HINT]: Ensure you have exactly one '/from' and one '/to' tag.");
-        }
-
-        int fromIdx = getTagIndex(details, "/from");
-        int toIdx = getTagIndex(details, "/to");
-
-        if (toIdx < fromIdx) {
-            throw new AftonException("You're trying to end the show before the curtains even rise?"
-                + " Order is everything."
-                + "\n[HINT]: Place the '/from' tag before the '/to' tag.");
-        }
-
-        validateTagContent(details, fromIdx, "/from", ERROR_MISSING_FROM_VALUE);
-        validateTagContent(details, toIdx, "/to", ERROR_MISSING_TO_VALUE);
-    }
-
-    private static void validateIndex(String[] details, String command) throws AftonException {
-        if (tL.isEmpty()) {
-            throw new AftonException("There is nothing here to silence. You haven't even started your work. "
-                + "\n[HINT]: Add a task before trying to " + command);
-        }
-        try {
-            int index = Integer.parseInt(details[0]);
-            if (index < 1 || index > tL.size()) {
-                throw new AftonException("Are you seeing ghosts? That record doesn't exist. Stay within the count."
-                    + "\n[HINT]: Enter a number between 1 and " + tL.size() + ".");
-            }
-        } catch (NumberFormatException e) {
-            throw new AftonException("'" + details[0] + "' is not a number."
-                + "I require mathematical precision, not guesswork."
-                + "\n[HINT]: Provide a valid integer index.");
-        }
-    }
-
-    private static void validateHelp(String command) throws AftonException {
-        String[] commands = {"todo", "deadline", "event", "list", "mark", "unmark", "find", "delete"};
-        if (!Arrays.stream(commands).anyMatch(command.toLowerCase()::equals)) {
-            throw new AftonException("Are you trying to find a secret door? There is no such command in my ledger."
-            + " Stick to the protocols I gave you, or don't speak at all."
-            + "\n[HINT]: For a list of all valid commands try inputting 'help' only");
-        }
     }
 
     private static String markTask(int index) {
