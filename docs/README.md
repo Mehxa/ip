@@ -1,10 +1,8 @@
-# Duke User Guide
+# PurpleGuy User Guide
 
-// Update the title above to match the actual product name
+![Product Screenshot](Ui.png)
 
-// Product screenshot goes here
-
-// Product intro goes here
+PurpleGuy is a task management desktop app, themed upon a certain popular indie horror villain. It stores task information locally and is optimised for use via a Graphical User Interface (GUI)
 
 ## Adding deadlines
 
