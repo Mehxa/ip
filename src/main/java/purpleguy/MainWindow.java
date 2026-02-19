@@ -32,10 +32,13 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userInput.setPromptText("Speak with Afton:");
         dialogContainer.getChildren().add(
             DialogBox.getAftonDialog(("You look... familiar. Have we met at the Pizzeria?\n"
             + "I'm William. But I suppose you have your own names for me.\n"
-            + "Tell me... why are you really here?\n"), aftonImage));
+            + "Tell me... why are you really here?\n\n"
+            + "Cat got your tongue? If you find yourself lost in the dark, just scream for 'help'."
+            + " I might decide to show you the way out."), aftonImage));
     }
 
     /** Injects the Afton instance */

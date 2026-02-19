@@ -1,21 +1,29 @@
 .root {
-    main-color: rgb(237, 255, 242);       /* Create a looked-up color called "main-color" within root. */
+    main-color: rgb(20, 10, 30);       /* Create a looked-up color called "main-color" within root. */
     -fx-background-color: main-color;
+    -fx-background-image: url("../images/fnaf-background.jpg"); /* Set image */
+    -fx-background-size: stretch;
 }
 
 .text-field {
-    -fx-background-color: #d9ffe2;
-    -fx-font: 20px "Arial";
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #bc8f8f;
+    -fx-prompt-text-fill: #4b0082;
+    -fx-border-color: #4b0082;
+    -fx-border-width: 0 0 2 0;
+    -fx-font: 20px "Courier New";
 }
 
 .button {
-    -fx-background-color: mediumspringgreen;
+    -fx-background-color: #4b0082;
+    -fx-text-fill: white;
     -fx-font: italic bold 16px "Arial";
+    -fx-border-color: #800080;
 }
 
 .button:hover {
-    -fx-background-color:cyan;
-    -fx-font-size: 18px;
+    -fx-background-color: #800080;
+    -fx-effect: dropshadow(three-pass-box, #ff00ff, 10, 0, 0, 0);
 }
 
 .button:pressed {
@@ -34,8 +42,8 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #ff9cb4;
-    -fx-background-radius: 1em;
+    -fx-background-color: #4b0082;
+    -fx-background-radius: 0;
 }
 
 /* Hides the increment and decrement buttons. */

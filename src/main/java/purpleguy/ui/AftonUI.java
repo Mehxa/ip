@@ -47,7 +47,7 @@ public class AftonUI {
     }
 
     /**
-     * Initialise the UI by drawing the PurpleGuy sprite and printing greetings
+     * Initialises the UI with the PurpleGuy sprite and greetings
      */
     public void initialise() {
         for (String body : SPRITE) {

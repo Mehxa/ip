@@ -3,6 +3,7 @@ package purpleguy;
 import java.io.IOException;
 import java.util.Collections;
 
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -49,6 +51,21 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
+    private void applyGlitchEffect(Node node) {
+        // Create a timeline for a quick, shaky movement
+        TranslateTransition tt = new TranslateTransition(Duration.millis(50), node);
+        tt.setFromX(0);
+        tt.setToX(3); // Small jitter to the right
+        tt.setCycleCount(4); // Repeat back and forth
+        tt.setAutoReverse(true);
+
+        // Optional: Add a slight scale change to make it "pop"
+        node.setScaleX(1.02);
+        tt.setOnFinished(e -> node.setScaleX(1.0));
+
+        tt.play();
+    }
+
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
@@ -56,6 +73,7 @@ public class DialogBox extends HBox {
     public static DialogBox getAftonDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.applyGlitchEffect(db);
         return db;
     }
 }
