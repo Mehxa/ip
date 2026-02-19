@@ -1,5 +1,7 @@
 package purpleguy;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import purpleguy.exception.AftonException;
@@ -16,6 +18,10 @@ public class CommandValidator {
                 + " but left the ending in a void."
                 + " Tell me when /to finish it"
                 + "\n[HINT]: Provide the timing details immediately after the /to tag";
+    private static final String DEADLINE_WRONG_FORMAT_ERROR = "Your grasp of time is... messy."
+                + " I don't operate on 'soon' or 'later'."
+                + " Give me a format that holds weight in my ledger, or the record will be lost to the void."
+                + "\n[HINT]: Time Format: yyyy-MM-dd HH:mm (e.g., 2026-10-31 23:59)";
 
     /**
      * Validates input given by the user
@@ -27,7 +33,7 @@ public class CommandValidator {
     public void validate(String command, String[] details, TaskList tL) throws AftonException {
         if (!isKnownCommand(command)) {
             throw new AftonException("'" + command + "'? I don't recognize that. Don't waste my time with nonsense. "
-                + "\n[HINT]: I only respond to: todo, deadline, event, list, find, mark, unmark, or delete.");
+                + "\n[HINT]: Use 'help' to view the full list of valid commands.");
         }
         // Resolving list first as it is the only command
         // which does not require extra parameters
@@ -88,7 +94,7 @@ public class CommandValidator {
     }
 
     private static boolean isKnownCommand(String command) {
-        return List.of("todo", "deadline", "event", "list", "mark", "unmark", "find", "delete", "help")
+        return List.of("todo", "deadline", "event", "list", "mark", "unmark", "find", "delete", "help", "bye")
         .contains(command);
     }
 
@@ -182,6 +188,13 @@ public class CommandValidator {
             throw new AftonException("A tag with no data? You're stalling. Tell me *when* the clock stops for "
                 + details[0]
                 + "\n[HINT]: Provide the timing details immediately after the /by tag");
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime.parse(details[1].replace("/by", "").trim(), formatter);
+        } catch (Exception e) {
+            throw new AftonException(DEADLINE_WRONG_FORMAT_ERROR);
         }
     }
 

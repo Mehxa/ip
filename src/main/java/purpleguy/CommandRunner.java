@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import purpleguy.storage.Storage;
 import purpleguy.tasklist.TaskList;
 
 /**
@@ -40,8 +41,13 @@ public class CommandRunner {
     private static final String DELETE_HELP_MESSAGE = "Command: delete [index]\n"
                 + "[index] must be a number\n"
                 + "To erase something...or someone...forever\n";
+    private static final String HELP_HELP_MESSAGE = "Command: help [command]\n"
+                + "Just type 'help' followed by the name of a command to peek behind the curtain.\n";
+    private static final String BYE_HELP_MESSAGE = "Command: bye\n"
+                + "Use this to sever our connection... but remember, I always come back.\n";
 
     private static TaskList tL;
+    private static Storage storageFile = new Storage();
 
     public CommandRunner(TaskList taskList) {
         tL = taskList;
@@ -143,12 +149,14 @@ public class CommandRunner {
     private static String markTask(int index) {
         Task mTask = tL.get(index);
         mTask.mark();
+        storageFile.storeTL(tL);
         return "Done. It's finally... over. For now.\n" + mTask + "\n";
     }
 
     private static String unmarkTask(int index) {
         Task umTask = tL.get(index);
         umTask.unmark();
+        storageFile.storeTL(tL);
         return "Back again? It seems some things just won't stay buried.\n" + umTask + "\n";
     }
 
@@ -156,6 +164,7 @@ public class CommandRunner {
         String taskName = details[0];
         Task td = new ToDo(taskName);
         tL.addTask(td);
+        storageFile.storeTL(tL);
         return formatTaskMessage(td, TODO_ADD_MESSAGE);
     }
 
@@ -164,6 +173,7 @@ public class CommandRunner {
         Task dlTask = new Deadline(taskName, LocalDateTime.parse(details[1]
             .replace("/by", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         tL.addTask(dlTask);
+        storageFile.storeTL(tL);
         return formatTaskMessage(dlTask, DEADLINE_ADD_MESSAGE);
     }
 
@@ -173,6 +183,7 @@ public class CommandRunner {
             details[1].replace("/from", "").trim(),
             details[2].replace("/to", "").trim());
         tL.addTask(evTask);
+        storageFile.storeTL(tL);
         return formatTaskMessage(evTask, EVENT_ADD_MESSAGE);
     }
 
@@ -186,6 +197,7 @@ public class CommandRunner {
             ? "The room is empty. Silence at last... but for how long?\n"
             : "There are " + tL.size() + " souls left to manage. We aren't finished yet.\n";
         resultString += delMessage;
+        storageFile.storeTL(tL);
         return resultString;
     }
 
@@ -235,6 +247,12 @@ public class CommandRunner {
         case "delete":
             resultString = DELETE_HELP_MESSAGE;
             break;
+        case "help":
+            resultString = HELP_HELP_MESSAGE;
+            break;
+        case "bye":
+            resultString = BYE_HELP_MESSAGE;
+            break;
         default:
             break;
         }
@@ -249,6 +267,8 @@ public class CommandRunner {
             + MARK_HELP_MESSAGE + "\n"
             + UNMARK_HELP_MESSAGE + "\n"
             + FIND_HELP_MESSAGE + "\n"
-            + DELETE_HELP_MESSAGE;
+            + DELETE_HELP_MESSAGE + "\n"
+            + HELP_HELP_MESSAGE + "\n"
+            + BYE_HELP_MESSAGE;
     }
 }
