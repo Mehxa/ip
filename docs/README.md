@@ -1,8 +1,9 @@
-# PurpleGuy User Guide
+# 🟪PurpleGuy User Guide
 
 ![Product Screenshot](Ui.png)
 
-PurpleGuy is a task management desktop app, themed upon a certain popular indie horror villain😈. It stores task information locally and is optimised for use via a Graphical User Interface (GUI)🟪
+PurpleGuy is a task management desktop app, themed upon a certain popular indie horror villain😈.\
+It stores task information locally and is optimised for use via a Graphical User Interface (GUI)
 
 ## 📝 Adding Todo: `todo`
 
