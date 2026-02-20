@@ -40,7 +40,7 @@ public class Task {
      * @return T/F based on if the substring is in the name
      */
     public boolean containsString(String s) {
-        return this.name.contains(s);
+        return this.name.toLowerCase().contains(s);
     }
 
     /**
