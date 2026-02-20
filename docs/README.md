@@ -21,7 +21,9 @@ Outcome: Adds a task with the name specified to the list<br/><br/>
 
 Add a task with a deadline
 
-Format: `deadline NAME /by yyyy-MM-dd HH:mm`
+Format: `deadline NAME /by TIME`
+> TIME must be in YYYY-mm-dd HH:mm format
+
 
 Example: 
 ```
@@ -34,6 +36,8 @@ Outcome: Adds a task with the name and deadline specified to the list<br/><br/>
 Add a task that spans over a time period
 
 Format: `event NAME /from TIME /to TIME`
+
+> TIME must be in YYYY-mm-dd HH:mm format
 
 Example: 
 ```
