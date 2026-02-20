@@ -30,6 +30,12 @@ public class Parser {
      * @throws AftonException If error is occured during validateCommand
      */
     public String parse(String input) throws AftonException {
+        if (input.contains("|")) {
+            throw new AftonException("You're trying to wedge your own symbols into my architecture?"
+                + " Foolishness."
+                + "\n[HINT] Do not add the '|' symbol into your input"
+            );
+        }
         String[] caseVars = input.split("\\s+", 2); // To extract command
         String command = caseVars[0].toLowerCase();
         String[] details = (caseVars.length < 2 || caseVars[1].trim().isEmpty())
