@@ -21,7 +21,7 @@ public class CommandValidator {
                 + " but left the ending in a void."
                 + " Tell me when /to finish it"
                 + "\n[HINT]: Provide the timing details immediately after the /to tag";
-    private static final String TIME_WRONG_FORMAT_ERROR = "Your grasp of time is... messy."
+    private static final String ERROR_TIME_WRONG_FORMAT = "Your grasp of time is... messy."
                 + " I don't operate on 'soon' or 'later'."
                 + " Give me a format that holds weight in my ledger, or the record will be lost to the void."
                 + "\n[HINT]: Time Format: yyyy-MM-dd HH:mm (e.g., 2026-10-31 23:59)";
@@ -170,7 +170,7 @@ public class CommandValidator {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             return LocalDateTime.parse(dateString.replace(tag, "").trim(), formatter);
         } catch (Exception e) {
-            throw new AftonException(TIME_WRONG_FORMAT_ERROR);
+            throw new AftonException(ERROR_TIME_WRONG_FORMAT);
         }
 
     }
