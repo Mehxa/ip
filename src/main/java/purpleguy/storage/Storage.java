@@ -13,6 +13,7 @@ import purpleguy.Deadline;
 import purpleguy.Event;
 import purpleguy.Task;
 import purpleguy.ToDo;
+import purpleguy.exception.AftonException;
 import purpleguy.tasklist.TaskList;
 
 /**
@@ -43,7 +44,7 @@ public class Storage {
      * Retrieves task data from the PurpleGuy.txt file to update the taskList
      * @param tL The current taskList
      */
-    public void readTL(TaskList tL) {
+    public void readTL(TaskList tL) throws AftonException {
         Path fileName = Paths.get(STORAGE_FILEPATH);
         try {
             List<String> taskData = Files.readAllLines(fileName);
@@ -56,13 +57,11 @@ public class Storage {
                     t = new ToDo(taskName);
                     break;
                 case "D":
-                    t = new Deadline(taskName, LocalDateTime.parse(
-                        taskVars[3].trim(),
-                        DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")));
+                    t = new Deadline(taskName, formatDate(taskVars[3].trim()));
                     break;
                 case "E":
                     String[] time = taskVars[3].trim().split("-");
-                    t = new Event(taskName, time[0].trim(), time[1].trim());
+                    t = new Event(taskName, formatDate(time[0].trim()), formatDate(time[1].trim()));
                     break;
                 default:
                     break;
@@ -74,8 +73,13 @@ public class Storage {
             }
 
         } catch (IOException e) {
-            System.err.println("An error occured while attempting to read PurpleGuy.txt");
-            System.err.println(e.getMessage());
+            throw new AftonException("An error occured while attempting to read PurpleGuy.txt");
+        } catch (IndexOutOfBoundsException e) {
+            throw new AftonException("Someone messed with my files...");
         }
+    }
+
+    private LocalDateTime formatDate(String dateString) {
+        return LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm"));
     }
 }
