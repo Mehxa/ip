@@ -16,7 +16,11 @@ public class PurpleGuy {
     private static TaskList taskList = new TaskList();
 
     public static void main(String[] args) {
-        storageFile.readTL(taskList);
+        try {
+            storageFile.readTL(taskList);
+        } catch (Exception e) {
+            afton.speak(e.getMessage());
+        }
         Parser p = new Parser(taskList);
         afton.initialise();
         String userInput = afton.readInput();
@@ -37,8 +41,15 @@ public class PurpleGuy {
         storageFile.storeTL(taskList);
     }
 
-    public void initialiseStorage() {
-        storageFile.readTL(taskList);
+    /**
+     * Initialises the tasklist with Task data from the text file
+     */
+    public void initialiseTasklist() {
+        try {
+            storageFile.readTL(taskList);
+        } catch (Exception e) {
+            afton.speak(e.getMessage());
+        }
     }
 
     public String getResponse(String input) {

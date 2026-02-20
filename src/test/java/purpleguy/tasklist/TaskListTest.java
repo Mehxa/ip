@@ -19,7 +19,9 @@ public class TaskListTest {
         ToDo testToDo = new ToDo("homework");
         Deadline testDeadline = new Deadline("household chores", LocalDateTime.parse("2026-01-28 13:00",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        Event testEvent = new Event("Sports Day", "Mon 2pm", "4pm");
+        Event testEvent = new Event("Sports Day", LocalDateTime.parse("2026-01-29 13:00",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), LocalDateTime.parse("2026-01-30 13:00",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         ArrayList<String> testList = new ArrayList<String>();
         testList.add(testToDo.toData());
         testList.add(testDeadline.toData());

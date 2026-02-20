@@ -11,6 +11,9 @@ import purpleguy.tasklist.TaskList;
  * Validates the commands inputted by the user
  */
 public class CommandValidator {
+    private static final String ERROR_MISSING_BY_VALUE = "A tag with no data? You're stalling."
+                + " Tell me *when* the clock stops."
+                + "\n[HINT]: Provide the timing details immediately after the /by tag";
     private static final String ERROR_MISSING_FROM_VALUE = "The stage is set, but the actors have no cues for /from."
                 + " Provide a time, or the curtains stay closed."
                 + "\n[HINT]: Provide the timing details immediately after the /from tag";
@@ -18,7 +21,7 @@ public class CommandValidator {
                 + " but left the ending in a void."
                 + " Tell me when /to finish it"
                 + "\n[HINT]: Provide the timing details immediately after the /to tag";
-    private static final String DEADLINE_WRONG_FORMAT_ERROR = "Your grasp of time is... messy."
+    private static final String TIME_WRONG_FORMAT_ERROR = "Your grasp of time is... messy."
                 + " I don't operate on 'soon' or 'later'."
                 + " Give me a format that holds weight in my ledger, or the record will be lost to the void."
                 + "\n[HINT]: Time Format: yyyy-MM-dd HH:mm (e.g., 2026-10-31 23:59)";
@@ -99,7 +102,7 @@ public class CommandValidator {
     }
 
     private static void validateList(String[] details, boolean isEmpty) throws AftonException {
-        if (details.length > 1) {
+        if (details.length > 0) {
             throw new AftonException("Do you think I'm blind? "
                                     + "I don't need your 'extra information' to view my own ledger. "
                                     + "Just say the word and be quiet."
@@ -162,6 +165,16 @@ public class CommandValidator {
         }
     }
 
+    private static LocalDateTime validateDate(String dateString, String tag) throws AftonException {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return LocalDateTime.parse(dateString.replace(tag, "").trim(), formatter);
+        } catch (Exception e) {
+            throw new AftonException(TIME_WRONG_FORMAT_ERROR);
+        }
+
+    }
+
     private static void validateDeadline(String[] details) throws AftonException {
         int noOfBy = countTags(details, "/by");
         int noOfFrom = countTags(details, "/from");
@@ -184,18 +197,10 @@ public class CommandValidator {
                 + "\n[HINT]: Ensure you only have one '/by' tag.");
         }
 
-        if (details[1].trim().equals("/by")) {
-            throw new AftonException("A tag with no data? You're stalling. Tell me *when* the clock stops for "
-                + details[0]
-                + "\n[HINT]: Provide the timing details immediately after the /by tag");
-        }
+        int byIndex = 1;
+        validateTagContent(details, byIndex, "/by", ERROR_MISSING_BY_VALUE);
 
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime.parse(details[1].replace("/by", "").trim(), formatter);
-        } catch (Exception e) {
-            throw new AftonException(DEADLINE_WRONG_FORMAT_ERROR);
-        }
+        validateDate(details[1], "/by");
     }
 
     private static void validateEvent(String[] details) throws AftonException {
@@ -226,6 +231,20 @@ public class CommandValidator {
 
         validateTagContent(details, fromIdx, "/from", ERROR_MISSING_FROM_VALUE);
         validateTagContent(details, toIdx, "/to", ERROR_MISSING_TO_VALUE);
+
+        LocalDateTime fromTime = validateDate(details[1], "/from");
+        LocalDateTime toTime = validateDate(details[2], "/to");
+        if (fromTime.isAfter(toTime)) {
+            throw new AftonException("Time is a linear path, not a circle for you to wander. "
+                + "You're trying to end an event before it even begins... "
+                + "such a sloppy paradox. Fix the record, or I'll leave it to rot."
+                + "\n[HINT]: The /from time must be before the /to time");
+        }
+        if (fromTime.isEqual(toTime)) {
+            throw new AftonException("An event with no duration? How pointless. "
+                + "Even a moment of agony has a beginning and an end."
+                + "\n[HINT]: The /from time and /to time cannot be the same");
+        }
     }
 
     private static void validateIndex(String[] details, String command, TaskList tL) throws AftonException {

@@ -76,7 +76,7 @@ public class CommandRunner {
     public static String listTasks(List<Task> l) {
         String listContent = "";
         for (int i = 0; i < l.size(); i++) {
-            listContent += String.format("%d.%s\n", (i + 1), l.get(i));
+            listContent += String.format("%s\n", l.get(i));
         }
         return listContent;
     }
@@ -179,9 +179,10 @@ public class CommandRunner {
 
     private static String createEvent(String[] details) {
         String taskName = details[0];
-        Task evTask = new Event(taskName,
-            details[1].replace("/from", "").trim(),
-            details[2].replace("/to", "").trim());
+        Task evTask = new Event(taskName, LocalDateTime.parse(details[1]
+            .replace("/from", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+            LocalDateTime.parse(details[2]
+            .replace("/to", "").trim(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         tL.addTask(evTask);
         storageFile.storeTL(tL);
         return formatTaskMessage(evTask, EVENT_ADD_MESSAGE);
@@ -202,7 +203,7 @@ public class CommandRunner {
     }
 
     private static String findTask(String[] details) {
-        String searchTerm = details[0];
+        String searchTerm = details[0].toLowerCase();
         List<Task> results = tL.findTasks(searchTerm);
         String resultString = "";
         if (results.isEmpty()) {
