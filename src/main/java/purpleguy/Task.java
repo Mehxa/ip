@@ -5,33 +5,33 @@ package purpleguy;
  */
 public class Task {
     private String name;
-    private Boolean marked;
+    private Boolean isMarked;
 
     protected Task(String name) {
         this.name = name;
-        this.marked = false;
+        this.isMarked = false;
     }
 
     /**
      * Changes a task's status to be complete/marked
      */
     public void mark() {
-        this.marked = true;
+        this.isMarked = true;
     }
 
     /**
      * Changes a task's status to be incomplete/unmarked
      */
     public void unmark() {
-        this.marked = false;
+        this.isMarked = false;
     }
 
     /**
      * Returns an X if this task is marked, or space if the task is unmarked
-     * @return Marked status represented by X or " "
+     * @return isMarked status represented by X or " "
      */
     public String getStatusString() {
-        return (marked ? "X" : " ");
+        return (isMarked ? "X" : " ");
     }
 
     /**
